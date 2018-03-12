@@ -261,7 +261,7 @@ JSON のデコードに失敗した場合、``r.json()`` は例外を発生さ�
    server, you can access ``r.raw``. If you want to do this, make sure you set
    ``stream=True`` in your initial request. Once you do, you can do this::
 
-極稀に、サーバーから生のソケットレスポンスを取得したい場合に ``r.raw`` にアクセスすることができます。
+ごく稀に、サーバーから生のソケットレスポンスを取得したい場合に ``r.raw`` にアクセスすることができます。
 これを行う場合は、最初のリクエスト時に ``stream=True`` をセットして下さい。
 一度セットすると、可能になります。::
 
@@ -316,7 +316,7 @@ may better fit your use cases.
 
 .. Note: Custom headers are given less precedence than more specific sources of information. For instance:
 
-注意点: 独自のヘッダーは、より具体的な情報より優先度は低くなります。例として:
+注意点: 独自のヘッダーとして追加された情報は、より具体的な情報より優先度は低くなります。例として:
 
 .. Authorization headers set with `headers=` will be overridden if credentials
    are specified in ``.netrc``, which in turn will be overridden by the  ``auth=``
@@ -328,12 +328,12 @@ may better fit your use cases.
 * `headers=` として設定された認証ヘッダーは、クレデンシャルが ``.netrc`` で指定されている場合は上書きされ、
   ``auth=`` パラメータによって上書きされます。
 * Authorization headers will be removed if you get redirected off-host.
-* Proxy-Authorization headers will be overridden by proxy credentials provided in the URL.
-* Content-Length headers will be overridden when we can determine the length of the content.
+* Proxy-Authorization ヘッダーは、URL で提供されたプロキシのクレデンシャルによって更新されます。
+* Content-Length ヘッダーは、コンテンツの長さが決まった時に更新されます。
 
 .. Furthermore, Requests does not change its behavior at all based on which custom headers are specified. The headers are simply passed on into the final request.
 
-さらに Requests は、独自のヘッダーが指定されたことによって振る舞いが変わることはありません。
+さらに、Requests は独自のヘッダーが指定されたことによって振る舞いが変わることはありません。
 ヘッダーは単純に最終的なリクエストに渡されるだけです。
 
 .. Note: All header values must be a ``string``, bytestring, or unicode. While permitted, it's advised to avoid passing unicode header values.

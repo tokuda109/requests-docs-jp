@@ -48,12 +48,6 @@ automatically. This is useful for the large number of websites that use OAuth
 to provide authentication. It also provides a lot of tweaks that handle ways
 that specific OAuth providers differ from the standard specifications.
 
-`requests-oauthlib`_ は、Requests から自動的に OAuth のやりとりを
-
-
-requests-oauthlibはリクエストからOAuthダンスを自動的に行うことができます。
-これは、OAuthを使用して認証を提供する多数のWebサイトで役に立ちます。 また、特定のOAuthプロバイダが標準仕様と異なる方法にも対応しています。
-
 .. _requests-oauthlib: https://requests-oauthlib.readthedocs.io/en/latest/
 
 
