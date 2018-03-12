@@ -1,46 +1,40 @@
 .. _updates:
 
-アップデート
-=================
 
-.. Updates
-   =======
+.. Community Updates
+   =================
+
+コミュニティのアップデート
+=============================
 
 .. If you'd like to stay up to date on the community and development of Requests,
    there are several options:
 
-Requestsの開発やコミュニティへの貢献したいと思っているなら、いくつか選択肢があります。
+コミュニティと Requests の開発についての最新の情報を取得したい場合、いくつか方法があります。:
 
 GitHub
 ------
 
 .. The best way to track the development of Requests is through
-   `the GitHub repo <https://github.com/kennethreitz/requests>`_.
+   `the GitHub repo <https://github.com/requests/requests>`_.
 
-`GitHubのリポジトリ <https://github.com/kennethreitz/requests>`_ からRequestsの開発を追っていくことは一番いい方法です。
+`GitHub のリポジトリ <https://github.com/requests/requests>`_ から Requests の開発を追うことができます。
 
 Twitter
 -------
 
-.. I often tweet about new features and releases of Requests.
+.. The author, Kenneth Reitz, often tweets about new features and releases of Requests.
 
-Requestsのリリースや新しい機能の追加について、たまにツイートします。
+作者の Kenneth Reitz は、Requests の新機能やリリースについて、たまにツイートします。
 
 .. Follow `@kennethreitz <https://twitter.com/kennethreitz>`_ for updates.
 
-アップデート情報を得たい場合は、 `@kennethreitz <https://twitter.com/kennethreitz>`_ をフォローして下さい。
+更新を受け取りたい場合は `@kennethreitz <https://twitter.com/kennethreitz>`_  をフォローしてください。
 
+.. Release and Version History
+   ===========================
 
-.. Mailing List
-   ------------
+リリースとバージョンの履歴
+==================================
 
-メーリングリスト
-------------------------
-
-.. There's a low-volume mailing list for Requests. To subscribe to the
-   mailing list, send an email to
-   `requests@librelist.org <mailto:requests@librelist.org>`_.
-
-あまり更新されないRequestsのメーリングリストがあります。
-メーリングリストを購読する場合は、 `requests@librelist.org <mailto:requests@librelist.org>`_ にメールを送って下さい。
-
+.. include:: ../../HISTORY.rst

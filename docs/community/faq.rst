@@ -1,44 +1,42 @@
 .. _faq:
 
-よくある質問
-=============================
-
 .. Frequently Asked Questions
    ==========================
 
+よくある質問
+==========================
+
 .. This part of the documentation answers common questions about Requests.
 
-ドキュメントのこの章は、Requestsに関する一般的な質問に答えます。
+ドキュメントのこの章では Requests についての一般的な質問について答えます。
 
 .. Encoded Data?
    -------------
 
-データはエンコードされますか?
----------------------------------------
+エンコードされたデータ
+--------------------------
 
 .. Requests automatically decompresses gzip-encoded responses, and does
    its best to decode response content to unicode when possible.
 
-Requestsは自動的にgzipエンコードされたレスポンスを解凍します。
-そして、可能ならユニコード化するためにレスポンスの本文をデコードします。
+Requests は、gzip エンコードされたレスポンスを自動的に解凍し、
+可能な限り Unicode に対応するレスポンスコンテンツにデコードしようとします。
 
 .. You can get direct access to the raw response (and even the socket),
    if needed as well.
 
-必要なら、生のレスポンス(とソケット)に直接アクセスすることができます。
-
+必要に応じて、生のレスポンス(さらにはソケット)に直接アクセスすることができます。
 
 .. Custom User-Agents?
    -------------------
 
-ユーザーエージェントをカスタマイズできますか?
---------------------------------------------------
+独自のユーザーエージェント
+------------------------------
 
 .. Requests allows you to easily override User-Agent strings, along with
    any other HTTP Header.
 
-Requestsは他のHTTPヘッダーと同様に、ユーザーエージェントの文字列を簡単に上書きすることができます。
-
+Requests は、他の HTTP ヘッダーと同じように User-Agent 文字列を簡単に上書きすることができます。
 
 .. Why not Httplib2?
    -----------------
@@ -49,56 +47,67 @@ Requestsは他のHTTPヘッダーと同様に、ユーザーエージェント�
 .. Chris Adams gave an excellent summary on
    `Hacker News <http://news.ycombinator.com/item?id=2884406>`_:
 
-Chris Adamsさんは、 `Hacker News <http://news.ycombinator.com/item?id=2884406>`_ で、すばらしい見解を述べています。
+Chris Adamsさんは、`Hacker News <http://news.ycombinator.com/item?id=2884406>`_ の投稿で、
+すばらしい見解を与えてくれました。
 
-    .. httplib2 is part of why you should use requests: it's far more respectable
-       as a client but not as well documented and it still takes way too much code
-       for basic operations. I appreciate what httplib2 is trying to do, that
-       there's a ton of hard low-level annoyances in building a modern HTTP
-       client, but really, just use requests instead. Kenneth Reitz is very
-       motivated and he gets the degree to which simple things should be simple
-       whereas httplib2 feels more like an academic exercise than something
-       people should use to build production systems[1].
+    httplib2 is part of why you should use requests: it's far more respectable
+    as a client but not as well documented and it still takes way too much code
+    for basic operations. I appreciate what httplib2 is trying to do, that
+    there's a ton of hard low-level annoyances in building a modern HTTP
+    client, but really, just use requests instead. Kenneth Reitz is very
+    motivated and he gets the degree to which simple things should be simple
+    whereas httplib2 feels more like an academic exercise than something
+    people should use to build production systems[1].
 
-    httplib2はRequestsをなぜ使うべきかという理由の一部でしかありません。
-    クライアントとしてはとても立派ですがドキュメント化があまりされていません。
-    そして、基本的な操作をするためにたくさんのコードを書く必要があります。
-    httplib2がやろうとしていることに感謝していますが、モダンなHTTPクライアントを作成するために低レベルの部分で不満がたくさんあるので、
-    実際はhttplib2の代わりにRequestsを使っています。
-    Kenneth Reitzはモチベーションが高く、本番環境のシステム[1]を作るために使うものよりはhttplib2は学校の勉強のような感じがするので、
-    簡単なことは簡単にできるようにしようとしています。
+    Disclosure: I'm listed in the requests AUTHORS file but can claim credit
+    for, oh, about 0.0001% of the awesomeness.
 
-    .. Disclosure: I'm listed in the requests AUTHORS file but can claim credit
-       for, oh, about 0.0001% of the awesomeness.
-
-    ディスクロージャー: RequestsのAUTHORSファイルにリストされていますが、クレジットにクレームを付けることができます。
-
-    .. http://code.google.com/p/httplib2/issues/detail?id=96 is a good example:
-       an annoying bug which affect many people, there was a fix available for
-       months, which worked great when I applied it in a fork and pounded a couple
-       TB of data through it, but it took over a year to make it into trunk and
-       even longer to make it onto PyPI where any other project which required "
-       httplib2" would get the working version.
-
-    1. http://code.google.com/p/httplib2/issues/detail?id=96は良い例です。:
-    たくさんの人に影響のある迷惑なバグは、そのバグによって数テラバイトものデータを解析してフォークしてそれを適用した時に数ヶ月も解決するために作業しなければいけなくなりますが、
-    キチンと動くバージョンの"httplib2"が必要となる他のプロジェクトでtrunkにそれを作るために一年かけて引き継いで、PyPIでそれをつくるために長い期間がかかります。
+    1. http://code.google.com/p/httplib2/issues/detail?id=96 is a good example:
+    an annoying bug which affect many people, there was a fix available for
+    months, which worked great when I applied it in a fork and pounded a couple
+    TB of data through it, but it took over a year to make it into trunk and
+    even longer to make it onto PyPI where any other project which required "
+    httplib2" would get the working version.
 
 
 .. Python 3 Support?
    -----------------
 
-Python 3をサポートしていますか?
+Python 3はサポートしていますか？
 ----------------------------------
 
 .. Yes! Here's a list of Python platforms that are officially
    supported:
 
-はい! 公式にサポートしているPythonプラットフォームのリストは以下のとおりです。
+はい！公式にサポートしている Python のプラットフォームは以下の通りです。:
 
 * Python 2.6
 * Python 2.7
-* Python 3.1
-* Python 3.2
-* Python 3.3
-* PyPy 1.9
+* Python 3.4
+* Python 3.5
+* Python 3.6
+* PyPy
+
+What are "hostname doesn't match" errors?
+-----------------------------------------
+
+These errors occur when :ref:`SSL certificate verification <verification>`
+fails to match the certificate the server responds with to the hostname
+Requests thinks it's contacting. If you're certain the server's SSL setup is
+correct (for example, because you can visit the site with your browser) and
+you're using Python 2.6 or 2.7, a possible explanation is that you need
+Server-Name-Indication.
+
+`Server-Name-Indication`_, or SNI, is an official extension to SSL where the
+client tells the server what hostname it is contacting. This is important
+when servers are using `Virtual Hosting`_. When such servers are hosting
+more than one SSL site they need to be able to return the appropriate
+certificate based on the hostname the client is connecting to.
+
+Python3 and Python 2.7.9+ include native support for SNI in their SSL modules.
+For information on using SNI with Requests on Python < 2.7.9 refer to this
+`Stack Overflow answer`_.
+
+.. _`Server-Name-Indication`: https://en.wikipedia.org/wiki/Server_Name_Indication
+.. _`virtual hosting`: https://en.wikipedia.org/wiki/Virtual_hosting
+.. _`Stack Overflow answer`: https://stackoverflow.com/questions/18578439/using-requests-with-tls-doesnt-give-sni-support/18579484#18579484
