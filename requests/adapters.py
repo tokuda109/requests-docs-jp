@@ -79,7 +79,10 @@ class BaseAdapter(object):
 
 
 class HTTPAdapter(BaseAdapter):
-    """The built-in HTTP Adapter for urllib3.
+    """
+    .. The built-in HTTP Adapter for urllib3.
+
+    urllib3 用の組み込みの HTTP アダプタ。
 
     Provides a general-case interface for Requests sessions to contact HTTP and
     HTTPS urls by implementing the Transport Adapter interface. This class will

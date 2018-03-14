@@ -362,9 +362,15 @@ def unquote_header_value(value, is_filename=False):
 
 
 def dict_from_cookiejar(cj):
-    """Returns a key/value dictionary from a CookieJar.
+    """
+    .. Returns a key/value dictionary from a CookieJar.
 
-    :param cj: CookieJar object to extract cookies from.
+    CookieJar からキー/値のディクショナリを返却します。
+
+    .. :param cj: CookieJar object to extract cookies from.
+    .. :rtype: dict
+
+    :param cj: Cookie を抽出するための CookieJar オブジェクト。
     :rtype: dict
     """
 
@@ -377,10 +383,17 @@ def dict_from_cookiejar(cj):
 
 
 def add_dict_to_cookiejar(cj, cookie_dict):
-    """Returns a CookieJar from a key/value dictionary.
+    """
+    .. Returns a CookieJar from a key/value dictionary.
 
-    :param cj: CookieJar to insert cookies into.
-    :param cookie_dict: Dict of key/values to insert into CookieJar.
+    キー/値のディクショナリから CookieJar を返却します。
+
+    .. :param cj: CookieJar to insert cookies into.
+    .. :param cookie_dict: Dict of key/values to insert into CookieJar.
+    .. :rtype: CookieJar
+
+    :param cj: Cookie に入れるための CookieJar。
+    :param cookie_dict: CookieJar に入れるキー/値のディクショナリ。
     :rtype: CookieJar
     """
 

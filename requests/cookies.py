@@ -164,8 +164,12 @@ def remove_cookie_by_name(cookiejar, name, domain=None, path=None):
 
 
 class CookieConflictError(RuntimeError):
-    """There are two cookies that meet the criteria specified in the cookie jar.
-    Use .get and .set and include domain and path args in order to be more specific.
+    """
+    .. There are two cookies that meet the criteria specified in the cookie jar.
+       Use .get and .set and include domain and path args in order to be more specific.
+
+    CookieJar に指定した Cookie と同じものがあります。
+    .get と .set を使って、別のドメインとパスを引数に含めます。
     """
 
 
@@ -501,12 +505,19 @@ def morsel_to_cookie(morsel):
 
 
 def cookiejar_from_dict(cookie_dict, cookiejar=None, overwrite=True):
-    """Returns a CookieJar from a key/value dictionary.
+    """
+    .. Returns a CookieJar from a key/value dictionary.
 
-    :param cookie_dict: Dict of key/values to insert into CookieJar.
-    :param cookiejar: (optional) A cookiejar to add the cookies to.
-    :param overwrite: (optional) If False, will not replace cookies
-        already in the jar with new ones.
+    キー/値のディクショナリから CookieJar を返却します。
+
+    .. :param cookie_dict: Dict of key/values to insert into CookieJar.
+    .. :param cookiejar: (optional) A cookiejar to add the cookies to.
+    .. :param overwrite: (optional) If False, will not replace cookies
+    ..     already in the jar with new ones.
+
+    :param cookie_dict: CookieJar に入れるキー/値のディクショナリ。
+    :param cookiejar: (任意) Cookie に追加するための CookieJar。
+    :param overwrite: (任意) False にすると、すでに Jar にある Cookie を新しいものに置き換えません。
     """
     if cookiejar is None:
         cookiejar = RequestsCookieJar()

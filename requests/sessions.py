@@ -96,7 +96,11 @@ def merge_hooks(request_hooks, session_hooks, dict_class=OrderedDict):
 class SessionRedirectMixin(object):
 
     def get_redirect_target(self, resp):
-        """Receives a Response. Returns a redirect URI or ``None``"""
+        """
+        .. Receives a Response. Returns a redirect URI or ``None``
+
+        レスポンスを受け取って、リダイレクト URI か ``None`` を返却します。
+        """
         # Due to the nature of how requests processes redirects this method will
         # be called at least once upon the original response and at least twice
         # on each subsequent redirect response (if any).
@@ -313,18 +317,27 @@ class SessionRedirectMixin(object):
 
 
 class Session(SessionRedirectMixin):
-    """A Requests session.
+    """
+    .. A Requests session.
 
-    Provides cookie persistence, connection-pooling, and configuration.
+    Requests のセッション。
 
-    Basic Usage::
+    .. Provides cookie persistence, connection-pooling, and configuration.
+
+    Cookieの永続化、コネクションプール、コンフィグの機能を提供します。
+
+    .. Basic Usage::
+
+    基本的な使い方::
 
       >>> import requests
       >>> s = requests.Session()
       >>> s.get('http://httpbin.org/get')
       <Response [200]>
 
-    Or as a context manager::
+    .. Or as a context manager::
+
+    もしくは、コンテキストマネージャーとしても使えます。::
 
       >>> with requests.Session() as s:
       >>>     s.get('http://httpbin.org/get')
@@ -344,8 +357,11 @@ class Session(SessionRedirectMixin):
         #: :class:`Session <Session>`.
         self.headers = default_headers()
 
-        #: Default Authentication tuple or object to attach to
-        #: :class:`Request <Request>`.
+        #: .. Default Authentication tuple or object to attach to
+        #:    :class:`Request <Request>`.
+        #:
+        #: :class:`Request <Request>` に付与するデフォルトの認証情報のタプル、
+        #: もしくはオブジェクト。
         self.auth = None
 
         #: Dictionary mapping protocol or protocol and host to the URL of the proxy
@@ -353,7 +369,9 @@ class Session(SessionRedirectMixin):
         #: be used on each :class:`Request <Request>`.
         self.proxies = {}
 
-        #: Event-handling hooks.
+        #: .. Event-handling hooks.
+        #:
+        #: イベント処理をするためのフック。
         self.hooks = default_hooks()
 
         #: Dictionary of querystring data to attach to each
@@ -367,8 +385,11 @@ class Session(SessionRedirectMixin):
         #: SSL Verification default.
         self.verify = True
 
-        #: SSL client certificate default, if String, path to ssl client
-        #: cert file (.pem). If Tuple, ('cert', 'key') pair.
+        #: .. SSL client certificate default, if String, path to ssl client
+        #:    cert file (.pem). If Tuple, ('cert', 'key') pair.
+        #:
+        #: SSL クライアントの証明書でデフォルトの挙動として、文字列の場合は証明書ファイル(.pem)へのパスで、
+        #: タプルの場合は('cert', 'key')のペアとなります。
         self.cert = None
 
         #: Maximum number of redirects allowed. If the request exceeds this
@@ -381,10 +402,14 @@ class Session(SessionRedirectMixin):
         #: authentication and similar.
         self.trust_env = True
 
-        #: A CookieJar containing all currently outstanding cookies set on this
-        #: session. By default it is a
-        #: :class:`RequestsCookieJar <requests.cookies.RequestsCookieJar>`, but
-        #: may be any other ``cookielib.CookieJar`` compatible object.
+        #: .. A CookieJar containing all currently outstanding cookies set on this
+        #:    session. By default it is a
+        #:    :class:`RequestsCookieJar <requests.cookies.RequestsCookieJar>`, but
+        #:    may be any other ``cookielib.CookieJar`` compatible object.
+        #:
+        #: CookieJar は、現在のセッションで設定されている全ての未処理の Cookie を含んでいます。
+        #: デフォルトでは、:class:`RequestsCookieJar <requests.cookies.RequestsCookieJar>` ですが、
+        #: 他の ``cookielib.CookieJar`` と互換性のあるオブジェクトでも問題ありません。
         self.cookies = cookiejar_from_dict({})
 
         # Default connection adapters.
@@ -510,10 +535,17 @@ class Session(SessionRedirectMixin):
         return resp
 
     def get(self, url, **kwargs):
-        r"""Sends a GET request. Returns :class:`Response` object.
+        r"""
+        .. Sends a GET request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        GET リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
@@ -521,10 +553,17 @@ class Session(SessionRedirectMixin):
         return self.request('GET', url, **kwargs)
 
     def options(self, url, **kwargs):
-        r"""Sends a OPTIONS request. Returns :class:`Response` object.
+        r"""
+        .. Sends a OPTIONS request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        OPTIONS リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
@@ -532,10 +571,17 @@ class Session(SessionRedirectMixin):
         return self.request('OPTIONS', url, **kwargs)
 
     def head(self, url, **kwargs):
-        r"""Sends a HEAD request. Returns :class:`Response` object.
+        r"""
+        .. Sends a HEAD request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        HEAD リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
@@ -543,44 +589,76 @@ class Session(SessionRedirectMixin):
         return self.request('HEAD', url, **kwargs)
 
     def post(self, url, data=None, json=None, **kwargs):
-        r"""Sends a POST request. Returns :class:`Response` object.
+        r"""
+        .. Sends a POST request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
-        :param json: (optional) json to send in the body of the :class:`Request`.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        POST リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        .. :param json: (optional) json to send in the body of the :class:`Request`.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param data: (任意) :class:`Request` のボティで送信するディクショナリ、バイトデータ、ファイル形式のオブジェクト。
+        :param json: (任意) :class:`Request` のボティで送信するJSON。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
         return self.request('POST', url, data=data, json=json, **kwargs)
 
     def put(self, url, data=None, **kwargs):
-        r"""Sends a PUT request. Returns :class:`Response` object.
+        r"""
+        .. Sends a PUT request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        PUT リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param data: (任意) :class:`Request` のボティで送信するディクショナリ、バイトデータ、ファイル形式のオブジェクト。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
         return self.request('PUT', url, data=data, **kwargs)
 
     def patch(self, url, data=None, **kwargs):
-        r"""Sends a PATCH request. Returns :class:`Response` object.
+        r"""
+        .. Sends a PATCH request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        PATCH リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param data: (任意) :class:`Request` のボティで送信するディクショナリ、バイトデータ、ファイル形式のオブジェクト。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
         return self.request('PATCH', url, data=data, **kwargs)
 
     def delete(self, url, **kwargs):
-        r"""Sends a DELETE request. Returns :class:`Response` object.
+        r"""
+        .. Sends a DELETE request. Returns :class:`Response` object.
 
-        :param url: URL for the new :class:`Request` object.
-        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        DELETE リクエストを送信します。:class:`Response` オブジェクトを返却します。
+
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param \*\*kwargs: Optional arguments that ``request`` takes.
+        .. :rtype: requests.Response
+
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
 
@@ -690,7 +768,9 @@ class Session(SessionRedirectMixin):
 
     def get_adapter(self, url):
         """
-        Returns the appropriate connection adapter for the given URL.
+        .. Returns the appropriate connection adapter for the given URL.
+
+        指定された URL の適切なコネクションアダプタを返却します。
 
         :rtype: requests.adapters.BaseAdapter
         """
@@ -703,7 +783,11 @@ class Session(SessionRedirectMixin):
         raise InvalidSchema("No connection adapters were found for '%s'" % url)
 
     def close(self):
-        """Closes all adapters and as such the session"""
+        """
+        .. Closes all adapters and as such the session
+
+        全てのアダプタやセッション等をクローズします。
+        """
         for v in self.adapters.values():
             v.close()
 
