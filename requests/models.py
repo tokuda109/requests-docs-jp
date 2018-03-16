@@ -60,7 +60,11 @@ ITER_CHUNK_SIZE = 512
 class RequestEncodingMixin(object):
     @property
     def path_url(self):
-        """Build the path URL to use."""
+        """
+        .. Build the path URL to use.
+
+        使用するパス URL を生成します。
+        """
 
         url = []
 
@@ -169,7 +173,11 @@ class RequestEncodingMixin(object):
 
 class RequestHooksMixin(object):
     def register_hook(self, event, hook):
-        """Properly register a hook."""
+        """
+        .. Properly register a hook.
+
+        フックを正しく登録してください。
+        """
 
         if event not in self.hooks:
             raise ValueError('Unsupported event specified, with event name "%s"' % (event))
@@ -180,8 +188,12 @@ class RequestHooksMixin(object):
             self.hooks[event].extend(h for h in hook if isinstance(h, collections.Callable))
 
     def deregister_hook(self, event, hook):
-        """Deregister a previously registered hook.
-        Returns True if the hook existed, False if not.
+        """
+        .. Deregister a previously registered hook.
+           Returns True if the hook existed, False if not.
+
+        既に登録されているフックを解除します。
+        フックが存在する場合、True を返し、そうでなければ False を返します。
         """
 
         try:
@@ -192,22 +204,40 @@ class RequestHooksMixin(object):
 
 
 class Request(RequestHooksMixin):
-    """A user-created :class:`Request <Request>` object.
+    """
+    .. A user-created :class:`Request <Request>` object.
 
-    Used to prepare a :class:`PreparedRequest <PreparedRequest>`, which is sent to the server.
+    作成した :class:`Request <Request>` オブジェクト。
 
-    :param method: HTTP method to use.
-    :param url: URL to send.
-    :param headers: dictionary of headers to send.
+    .. Used to prepare a :class:`PreparedRequest <PreparedRequest>`, which is sent to the server.
+
+    サーバーに送信される時に :class:`PreparedRequest <PreparedRequest>` が用意されます。
+
+    .. :param method: HTTP method to use.
+    .. :param url: URL to send.
+    .. :param headers: dictionary of headers to send.
+    .. :param files: dictionary of {filename: fileobject} files to multipart upload.
+    .. :param data: the body to attach to the request. If a dictionary is provided, form-encoding will take place.
+    .. :param json: json for the body to attach to the request (if files or data is not specified).
+    .. :param params: dictionary of URL parameters to append to the URL.
+    .. :param auth: Auth handler or (user, pass) tuple.
+    .. :param cookies: dictionary or CookieJar of cookies to attach to this request.
+    .. :param hooks: dictionary of callback hooks, for internal usage.
+
+    :param method: 使用する HTTP メソッド。
+    :param url: 送信する URL。
+    :param headers: 送信するヘッダーのディクショナリ。
     :param files: dictionary of {filename: fileobject} files to multipart upload.
-    :param data: the body to attach to the request. If a dictionary is provided, form-encoding will take place.
+    :param data: リクエストに付与するボディ。 If a dictionary is provided, form-encoding will take place.
     :param json: json for the body to attach to the request (if files or data is not specified).
-    :param params: dictionary of URL parameters to append to the URL.
-    :param auth: Auth handler or (user, pass) tuple.
-    :param cookies: dictionary or CookieJar of cookies to attach to this request.
-    :param hooks: dictionary of callback hooks, for internal usage.
+    :param params: URL に追加するための URL パラメータのディクショナリ。
+    :param auth: 認証用のヘッダーか (user, pass) のタプル。
+    :param cookies: このリクエストオブジェクトに付与する Cookie のディクショナリか CookieJar。
+    :param hooks: 内部的に使う用のコールバックフックのディクショナリ。
 
-    Usage::
+    .. Usage
+
+    使い方::
 
       >>> import requests
       >>> req = requests.Request('GET', 'http://httpbin.org/get')
@@ -244,7 +274,11 @@ class Request(RequestHooksMixin):
         return '<Request [%s]>' % (self.method)
 
     def prepare(self):
-        """Constructs a :class:`PreparedRequest <PreparedRequest>` for transmission and returns it."""
+        """
+        .. Constructs a :class:`PreparedRequest <PreparedRequest>` for transmission and returns it.
+
+        送信するための :class:`PreparedRequest <PreparedRequest>` を生成し、返却します。
+        """
         p = PreparedRequest()
         p.prepare(
             method=self.method,
@@ -262,12 +296,20 @@ class Request(RequestHooksMixin):
 
 
 class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
-    """The fully mutable :class:`PreparedRequest <PreparedRequest>` object,
-    containing the exact bytes that will be sent to the server.
+    """
+    .. The fully mutable :class:`PreparedRequest <PreparedRequest>` object,
+       containing the exact bytes that will be sent to the server.
 
-    Generated from either a :class:`Request <Request>` object or manually.
+    変更可能な :class:`PreparedRequest <PreparedRequest>` オブジェクトで、
+    サーバーに送信されるバイト列を含みます。
 
-    Usage::
+    .. Generated from either a :class:`Request <Request>` object or manually.
+
+    :class:`Request <Request>` オブジェクトから生成されるか、手動かのどちらかの方法で生成します。
+
+    .. Usage
+
+    使い方::
 
       >>> import requests
       >>> req = requests.Request('GET', 'http://httpbin.org/get')
@@ -280,18 +322,28 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
     """
 
     def __init__(self):
-        #: HTTP verb to send to the server.
+        #: .. HTTP verb to send to the server.
+        #:
+        #: サーバーに送信する HTTP メソッド。
         self.method = None
-        #: HTTP URL to send the request to.
+        #: .. HTTP URL to send the request to.
+        #:
+        #: 送信する HTTP URL。
         self.url = None
-        #: dictionary of HTTP headers.
+        #: .. dictionary of HTTP headers.
+        #:
+        #: HTTP ヘッダーのディクショナリ。
         self.headers = None
         # The `CookieJar` used to create the Cookie header will be stored here
         # after prepare_cookies is called
         self._cookies = None
-        #: request body to send to the server.
+        #: .. request body to send to the server.
+        #:
+        #: サーバーに送信するリクエストボディ。
         self.body = None
-        #: dictionary of callback hooks, for internal usage.
+        #: .. dictionary of callback hooks, for internal usage.
+        #:
+        #: 内部的に使う用のコールバックフックのディクショナリ。
         self.hooks = default_hooks()
         #: integer denoting starting position of a readable file-like body.
         self._body_position = None
@@ -299,7 +351,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
     def prepare(self,
             method=None, url=None, headers=None, files=None, data=None,
             params=None, auth=None, cookies=None, hooks=None, json=None):
-        """Prepares the entire request with the given parameters."""
+        """
+        .. Prepares the entire request with the given parameters.
+
+        渡したパラメータでリクエストの処理の準備をします。
+        """
 
         self.prepare_method(method)
         self.prepare_url(url, params)
@@ -329,7 +385,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         return p
 
     def prepare_method(self, method):
-        """Prepares the given HTTP method."""
+        """
+        .. Prepares the given HTTP method.
+
+        渡した HTTP メソッドで処理の準備をします。
+        """
         self.method = method
         if self.method is not None:
             self.method = to_native_string(self.method.upper())
@@ -345,7 +405,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         return host
 
     def prepare_url(self, url, params):
-        """Prepares the given HTTP URL."""
+        """
+        .. Prepares the given HTTP URL.
+
+        渡した HTTP URL で処理の準備をします。
+        """
         #: Accept objects that have string representations.
         #: We're unable to blindly call unicode/str functions
         #: as this will include the bytestring indicator (b'')
@@ -431,7 +495,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         self.url = url
 
     def prepare_headers(self, headers):
-        """Prepares the given HTTP headers."""
+        """
+        .. Prepares the given HTTP headers.
+
+        渡した HTTP ヘッダーで処理の準備をします。
+        """
 
         self.headers = CaseInsensitiveDict()
         if headers:
@@ -442,7 +510,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
                 self.headers[to_native_string(name)] = value
 
     def prepare_body(self, data, files, json=None):
-        """Prepares the given HTTP body data."""
+        """
+        .. Prepares the given HTTP body data.
+
+        渡した HTTP ボディデータで処理の準備をします。
+        """
 
         # Check if file, fo, generator, iterator.
         # If not, run through normal process.
@@ -511,7 +583,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         self.body = body
 
     def prepare_content_length(self, body):
-        """Prepare Content-Length header based on request method and body"""
+        """
+        .. Prepare Content-Length header based on request method and body
+
+        リクエストメソッドやボディに基いて Content-Length ヘッダーの前処理をします。
+        """
         if body is not None:
             length = super_len(body)
             if length:
@@ -524,7 +600,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
             self.headers['Content-Length'] = '0'
 
     def prepare_auth(self, auth, url=''):
-        """Prepares the given HTTP auth data."""
+        """
+        .. Prepares the given HTTP auth data.
+
+        渡した HTTP 認証データで処理の準備をします。
+        """
 
         # If no Auth is explicitly provided, extract it from the URL first.
         if auth is None:
@@ -546,7 +626,10 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
             self.prepare_content_length(self.body)
 
     def prepare_cookies(self, cookies):
-        """Prepares the given HTTP cookie data.
+        """
+        .. Prepares the given HTTP cookie data.
+
+        渡した HTTP Cookie データで処理の準備をします。
 
         This function eventually generates a ``Cookie`` header from the
         given cookies using cookielib. Due to cookielib's design, the header
@@ -576,8 +659,12 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
 
 
 class Response(object):
-    """The :class:`Response <Response>` object, which contains a
-    server's response to an HTTP request.
+    """
+    .. The :class:`Response <Response>` object, which contains a
+       server's response to an HTTP request.
+
+    HTTP リクエストに対するサーバーからのレスポンスを含む
+    :class:`Response <Response>` オブジェクト。
     """
 
     __attrs__ = [
@@ -606,7 +693,9 @@ class Response(object):
         #: Final URL location of Response.
         self.url = None
 
-        #: Encoding to decode with when accessing r.text.
+        #: .. Encoding to decode with when accessing r.text.
+        #:
+        #: r.text アクセスする時にデコードするエンコーディング。
         self.encoding = None
 
         #: A list of :class:`Response <Response>` objects from
@@ -617,7 +706,9 @@ class Response(object):
         #: Textual reason of responded HTTP Status, e.g. "Not Found" or "OK".
         self.reason = None
 
-        #: A CookieJar of Cookies the server sent back.
+        #: .. A CookieJar of Cookies the server sent back.
+        #:
+        #: サーバーから返却された Cookie の CookieJar。
         self.cookies = cookiejar_from_dict({})
 
         #: The amount of time elapsed between sending the request
@@ -718,7 +809,11 @@ class Response(object):
 
     @property
     def apparent_encoding(self):
-        """The apparent encoding, provided by the chardet library."""
+        """
+        .. The apparent encoding, provided by the chardet library.
+
+        chardet ライブラリで提供されているエンコーディング。
+        """
         return chardet.detect(self.content)['encoding']
 
     def iter_content(self, chunk_size=1, decode_unicode=False):
@@ -809,7 +904,11 @@ class Response(object):
 
     @property
     def content(self):
-        """Content of the response, in bytes."""
+        """
+        .. Content of the response, in bytes.
+
+        レスポンスのバイト列のコンテンツ。
+        """
 
         if self._content is False:
             # Read the contents.
