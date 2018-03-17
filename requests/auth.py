@@ -70,14 +70,22 @@ def _basic_auth_str(username, password):
 
 
 class AuthBase(object):
-    """Base class that all auth implementations derive from"""
+    """
+    .. Base class that all auth implementations derive from
+
+    全ての認証処理の実装が継承する基本となるクラス。
+    """
 
     def __call__(self, r):
         raise NotImplementedError('Auth hooks must be callable.')
 
 
 class HTTPBasicAuth(AuthBase):
-    """Attaches HTTP Basic Authentication to the given Request object."""
+    """
+    .. Attaches HTTP Basic Authentication to the given Request object.
+
+    渡した Request オブジェクトに HTTP Basic 認証を付与する。
+    """
 
     def __init__(self, username, password):
         self.username = username
@@ -98,7 +106,11 @@ class HTTPBasicAuth(AuthBase):
 
 
 class HTTPProxyAuth(HTTPBasicAuth):
-    """Attaches HTTP Proxy Authentication to a given Request object."""
+    """
+    .. Attaches HTTP Proxy Authentication to a given Request object.
+
+    渡した Request オブジェクトに HTTP Proxy 認証を付与する。
+    """
 
     def __call__(self, r):
         r.headers['Proxy-Authorization'] = _basic_auth_str(self.username, self.password)
@@ -106,7 +118,11 @@ class HTTPProxyAuth(HTTPBasicAuth):
 
 
 class HTTPDigestAuth(AuthBase):
-    """Attaches HTTP Digest Authentication to the given Request object."""
+    """
+    .. Attaches HTTP Digest Authentication to the given Request object.
+
+    渡した Request オブジェクトに HTTP Digest 認証を付与する。
+    """
 
     def __init__(self, username, password):
         self.username = username

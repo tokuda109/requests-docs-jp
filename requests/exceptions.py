@@ -10,8 +10,11 @@ from urllib3.exceptions import HTTPError as BaseHTTPError
 
 
 class RequestException(IOError):
-    """There was an ambiguous exception that occurred while handling your
-    request.
+    """
+    .. There was an ambiguous exception that occurred while handling your
+       request.
+
+    リクエストの処理中に原因不明な例外が起きた時に送出されます。
     """
 
     def __init__(self, *args, **kwargs):
@@ -26,11 +29,19 @@ class RequestException(IOError):
 
 
 class HTTPError(RequestException):
-    """An HTTP error occurred."""
+    """
+    .. An HTTP error occurred.
+
+    HTTP エラーが起きた時に送出されます。
+    """
 
 
 class ConnectionError(RequestException):
-    """A Connection error occurred."""
+    """
+    .. A Connection error occurred.
+
+    コネクションエラーが起きた時に送出されます。
+    """
 
 
 class ProxyError(ConnectionError):
@@ -42,31 +53,54 @@ class SSLError(ConnectionError):
 
 
 class Timeout(RequestException):
-    """The request timed out.
+    """
+    .. The request timed out.
 
-    Catching this error will catch both
-    :exc:`~requests.exceptions.ConnectTimeout` and
-    :exc:`~requests.exceptions.ReadTimeout` errors.
+    リクエストがタイムアウトした時に送出されます。
+
+    .. Catching this error will catch both
+       :exc:`~requests.exceptions.ConnectTimeout` and
+       :exc:`~requests.exceptions.ReadTimeout` errors.
+
+    このエラーを受け取ると、:exc:`~requests.exceptions.ConnectTimeout` と
+    :exc:`~requests.exceptions.ReadTimeout` の2つのエラーを受け取ることになります。
     """
 
 
 class ConnectTimeout(ConnectionError, Timeout):
-    """The request timed out while trying to connect to the remote server.
+    """
+    .. The request timed out while trying to connect to the remote server.
 
-    Requests that produced this error are safe to retry.
+    リモートサーバーに接続しようとして、リクエストがタイムアウトした時に送出されます。
+
+    .. Requests that produced this error are safe to retry.
+
+    このエラーが発生したリクエストは、再度実行しても問題ありません。
     """
 
 
 class ReadTimeout(Timeout):
-    """The server did not send any data in the allotted amount of time."""
+    """
+    .. The server did not send any data in the allotted amount of time.
+
+    サーバーが設定された時間内にデータを返却しなかった場合に送出されます。
+    """
 
 
 class URLRequired(RequestException):
-    """A valid URL is required to make a request."""
+    """
+    .. A valid URL is required to make a request.
+
+    リクエストを生成するときに有効な URL が必要です。
+    """
 
 
 class TooManyRedirects(RequestException):
-    """Too many redirects."""
+    """
+    .. Too many redirects.
+
+    リダイレクト回数が多すぎる時に送出されます。
+    """
 
 
 class MissingSchema(RequestException, ValueError):

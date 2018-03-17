@@ -117,7 +117,8 @@ class MockResponse(object):
 
 
 def extract_cookies_to_jar(jar, request, response):
-    """Extract the cookies from the response into a CookieJar.
+    """
+    Extract the cookies from the response into a CookieJar.
 
     :param jar: cookielib.CookieJar (not necessarily a RequestsCookieJar)
     :param request: our own requests.Request object
@@ -177,18 +178,30 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
     """Compatibility class; is a cookielib.CookieJar, but exposes a dict
     interface.
 
-    This is the CookieJar we create by default for requests and sessions that
-    don't specify one, since some clients may expect response.cookies and
-    session.cookies to support dict operations.
+    .. This is the CookieJar we create by default for requests and sessions that
+       don't specify one, since some clients may expect response.cookies and
+       session.cookies to support dict operations.
 
-    Requests does not use the dict interface internally; it's just for
-    compatibility with external client code. All requests code should work
-    out of the box with externally provided instances of ``CookieJar``, e.g.
-    ``LWPCookieJar`` and ``FileCookieJar``.
+    いくつかのクライアントがディクショナリの操作をするための response.cookies と session.cookies を
+    サポートしていることを想定しているかもしれないので、リクエストとセッションをデフォルトで指定しないように生成した
+    CookieJar です。
 
-    Unlike a regular CookieJar, this class is pickleable.
+    .. Requests does not use the dict interface internally; it's just for
+       compatibility with external client code. All requests code should work
+       out of the box with externally provided instances of ``CookieJar``, e.g.
+       ``LWPCookieJar`` and ``FileCookieJar``.
 
-    .. warning:: dictionary operations that are normally O(1) may be O(n).
+    Requests は内部的にディクショナリのインターフェースを使用していません。
+    それは外部クライアントのコードとの互換性のためです。
+    全てのリクエストのコードは、外部から提供された ``CookieJar`` のインスタンス(例: ``LWPCookieJar`` や ``FileCookieJar``)を使って動作します。
+
+    .. Unlike a regular CookieJar, this class is pickleable.
+
+    通常の CookieJar とは異なり、このクラスは Pickle 化することが可能です。
+
+    .. warning dictionary operations that are normally O(1) may be O(n).
+
+    .. warning:: 通常は O(1) となるディクショナリの処理は、O(n) とすることができる。
     """
 
     def get(self, name, default=None, domain=None, path=None):
@@ -221,59 +234,95 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return c
 
     def iterkeys(self):
-        """Dict-like iterkeys() that returns an iterator of names of cookies
-        from the jar.
+        """
+        .. Dict-like iterkeys() that returns an iterator of names of cookies
+           from the jar.
 
-        .. seealso:: itervalues() and iteritems().
+        ディクショナリの iterkeys() のように、jar から Cookie の名前を返すイテレータを返却します。
+
+        .. seealso itervalues() and iteritems().
+
+        .. seealso:: itervalues() と iteritems() 。
         """
         for cookie in iter(self):
             yield cookie.name
 
     def keys(self):
-        """Dict-like keys() that returns a list of names of cookies from the
-        jar.
+        """
+        .. Dict-like keys() that returns a list of names of cookies from the
+           jar.
 
-        .. seealso:: values() and items().
+        ディクショナリの keys() のように、jar から Cookie の名前のリストを返却します。
+
+        .. seealso values() and items().
+
+        .. seealso:: values() と items() 。
         """
         return list(self.iterkeys())
 
     def itervalues(self):
-        """Dict-like itervalues() that returns an iterator of values of cookies
-        from the jar.
+        """
+        .. Dict-like itervalues() that returns an iterator of values of cookies
+           from the jar.
 
-        .. seealso:: iterkeys() and iteritems().
+        ディクショナリの itervalues() のように、jar から Cookie の値を返すイテレータを返却します。
+
+        .. seealso iterkeys() and iteritems().
+
+        .. seealso:: iterkeys() と iteritems() 。
         """
         for cookie in iter(self):
             yield cookie.value
 
     def values(self):
-        """Dict-like values() that returns a list of values of cookies from the
-        jar.
+        """
+        .. Dict-like values() that returns a list of values of cookies from the
+           jar.
 
-        .. seealso:: keys() and items().
+        ディクショナリの values() のように、jar から Cookie の値のリストを返却します。
+
+        .. seealso keys() and items().
+
+        .. seealso:: keys() と items() 。
         """
         return list(self.itervalues())
 
     def iteritems(self):
-        """Dict-like iteritems() that returns an iterator of name-value tuples
-        from the jar.
+        """
+        .. Dict-like iteritems() that returns an iterator of name-value tuples
+           from the jar.
 
-        .. seealso:: iterkeys() and itervalues().
+        ディクショナリの iteritems() のように、jar から名前と値のタプルのイテレータを返却します。
+
+        .. seealso iterkeys() and itervalues().
+
+        .. seealso:: iterkeys() と itervalues() 。
         """
         for cookie in iter(self):
             yield cookie.name, cookie.value
 
     def items(self):
-        """Dict-like items() that returns a list of name-value tuples from the
-        jar. Allows client-code to call ``dict(RequestsCookieJar)`` and get a
-        vanilla python dict of key value pairs.
+        """
+        .. Dict-like items() that returns a list of name-value tuples from the
+           jar. Allows client-code to call ``dict(RequestsCookieJar)`` and get a
+           vanilla python dict of key value pairs.
 
-        .. seealso:: keys() and values().
+        jar の名前と値のタプルのリストを返すディクショナリ形式の items()。
+        クライアントコードで ``dict(RequestsCookieJar)`` を呼び出して、
+        Vanilla Python のキーと値のペアのディクショナリを取得できるようにします。
+
+        .. seealso keys() and values().
+
+        .. seealso:: keys() と values() 。
         """
         return list(self.iteritems())
 
     def list_domains(self):
-        """Utility method to list all the domains in the jar."""
+        """
+        .. Utility method to list all the domains in the jar.
+
+        jar 内の全てのドメインの一覧を表示するユーティリティメソッド。
+        """
         domains = []
         for cookie in iter(self):
             if cookie.domain not in domains:
@@ -281,7 +330,11 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return domains
 
     def list_paths(self):
-        """Utility method to list all the paths in the jar."""
+        """
+        .. Utility method to list all the paths in the jar.
+
+        jar 内の全てのパスの一覧を表示するユーティリティメソッド。
+        """
         paths = []
         for cookie in iter(self):
             if cookie.path not in paths:
@@ -289,8 +342,11 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return paths
 
     def multiple_domains(self):
-        """Returns True if there are multiple domains in the jar.
-        Returns False otherwise.
+        """
+        .. Returns True if there are multiple domains in the jar.
+           Returns False otherwise.
+
+        jar に複数のドメインがある場合は True を返し、そうでなければ False を返します。
 
         :rtype: bool
         """
@@ -302,9 +358,12 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return False  # there is only one domain in jar
 
     def get_dict(self, domain=None, path=None):
-        """Takes as an argument an optional domain and path and returns a plain
-        old Python dict of name-value pairs of cookies that meet the
-        requirements.
+        """
+        .. Takes as an argument an optional domain and path and returns a plain
+           old Python dict of name-value pairs of cookies that meet the
+           requirements.
+
+        引数として、任意のドメインとパスを受け取り、要件を満たす Cookie の名前と値のペアの古い Python のディクショナリを返却します。
 
         :rtype: dict
         """
@@ -351,7 +410,11 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return super(RequestsCookieJar, self).set_cookie(cookie, *args, **kwargs)
 
     def update(self, other):
-        """Updates this jar with cookies from another CookieJar or dict-like"""
+        """
+        .. Updates this jar with cookies from another CookieJar or dict-like
+
+        この jar を別の CookieJar かディクショナリ形式の Cookie に更新します。
+        """
         if isinstance(other, cookielib.CookieJar):
             for cookie in other:
                 self.set_cookie(copy.copy(cookie))

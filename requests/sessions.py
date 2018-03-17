@@ -122,7 +122,11 @@ class SessionRedirectMixin(object):
 
     def resolve_redirects(self, resp, req, stream=False, timeout=None,
                           verify=True, cert=None, proxies=None, yield_requests=False, **adapter_kwargs):
-        """Receives a Response. Returns a generator of Responses or Requests."""
+        """
+        .. Receives a Response. Returns a generator of Responses or Requests.
+
+        レスポンスを受け取ります。レスポンスかリクエストのジェネレータを返却します。
+        """
 
         hist = []  # keep track of history
 
@@ -229,9 +233,13 @@ class SessionRedirectMixin(object):
                 yield resp
 
     def rebuild_auth(self, prepared_request, response):
-        """When being redirected we may want to strip authentication from the
-        request to avoid leaking credentials. This method intelligently removes
-        and reapplies authentication where possible to avoid credential loss.
+        """
+        .. When being redirected we may want to strip authentication from the
+           request to avoid leaking credentials. This method intelligently removes
+           and reapplies authentication where possible to avoid credential loss.
+
+        リダイレクトされた際、リクエストから認証情報を削除して認証情報を漏れないようにすることができます。
+        このメソッドは、認証情報を可能な限り失わないようして削除しつつ、認証情報を再適用することができます。
         """
         headers = prepared_request.headers
         url = prepared_request.url
@@ -294,8 +302,11 @@ class SessionRedirectMixin(object):
         return new_proxies
 
     def rebuild_method(self, prepared_request, response):
-        """When being redirected we may want to change the method of the request
-        based on certain specs or browser behavior.
+        """
+        .. When being redirected we may want to change the method of the request
+           based on certain specs or browser behavior.
+
+        リダイレクトされた際、特定の仕様やブラウザの挙動によって、リクエストのメソッドを変更することができます。
         """
         method = prepared_request.method
 
@@ -352,9 +363,12 @@ class Session(SessionRedirectMixin):
 
     def __init__(self):
 
-        #: A case-insensitive dictionary of headers to be sent on each
-        #: :class:`Request <Request>` sent from this
-        #: :class:`Session <Session>`.
+        #: .. A case-insensitive dictionary of headers to be sent on each
+        #:    :class:`Request <Request>` sent from this
+        #:    :class:`Session <Session>`.
+        #:
+        #: この :class:`Session <Session>` から送信された各 :class:`Request <Request>` で
+        #: 送信するための大文字・小文字を区別しないヘッダーのディクショナリ。
         self.headers = default_headers()
 
         #: .. Default Authentication tuple or object to attach to
@@ -364,9 +378,13 @@ class Session(SessionRedirectMixin):
         #: もしくはオブジェクト。
         self.auth = None
 
-        #: Dictionary mapping protocol or protocol and host to the URL of the proxy
-        #: (e.g. {'http': 'foo.bar:3128', 'http://host.name': 'foo.bar:4012'}) to
-        #: be used on each :class:`Request <Request>`.
+        #: .. Dictionary mapping protocol or protocol and host to the URL of the proxy
+        #:    (e.g. {'http': 'foo.bar:3128', 'http://host.name': 'foo.bar:4012'}) to
+        #:    be used on each :class:`Request <Request>`.
+        #:
+        #: プロキシの URL に各 :class:`Request <Request>` で使うために必要なプロトコル、
+        #: もしくはプロトコルとホストをマッピングするためのディクショナリ。
+        #: (例: {'http': 'foo.bar:3128', 'http://host.name': 'foo.bar:4012'})
         self.proxies = {}
 
         #: .. Event-handling hooks.
@@ -374,12 +392,17 @@ class Session(SessionRedirectMixin):
         #: イベント処理をするためのフック。
         self.hooks = default_hooks()
 
-        #: Dictionary of querystring data to attach to each
-        #: :class:`Request <Request>`. The dictionary values may be lists for
-        #: representing multivalued query parameters.
+        #: .. Dictionary of querystring data to attach to each
+        #:    :class:`Request <Request>`. The dictionary values may be lists for
+        #:    representing multivalued query parameters.
+        #:
+        #: 各 :class:`Request <Request>` に付与するクエリ文字列のディクショナリ。
+        #: ディクショナリの値は、クエリパラメータに対応するリスト形式にしてもいい。
         self.params = {}
 
-        #: Stream response content default.
+        #: .. Stream response content default.
+        #:
+        #: ストリームのレスポンスの内容。
         self.stream = False
 
         #: SSL Verification default.
@@ -392,14 +415,21 @@ class Session(SessionRedirectMixin):
         #: タプルの場合は('cert', 'key')のペアとなります。
         self.cert = None
 
-        #: Maximum number of redirects allowed. If the request exceeds this
-        #: limit, a :class:`TooManyRedirects` exception is raised.
-        #: This defaults to requests.models.DEFAULT_REDIRECT_LIMIT, which is
-        #: 30.
+        #: .. Maximum number of redirects allowed. If the request exceeds this
+        #:    limit, a :class:`TooManyRedirects` exception is raised.
+        #:    This defaults to requests.models.DEFAULT_REDIRECT_LIMIT, which is
+        #:    30.
+        #:
+        #: 許可するリダイレクトの最大回数。リクエストがこのリミットを超えると、
+        #: :class:`TooManyRedirects` の例外が送出されます。
+        #: これはデフォルトでは、requests.models.DEFAULT_REDIRECT_LIMIT の値となり、
+        #: 値は 30 です。
         self.max_redirects = DEFAULT_REDIRECT_LIMIT
 
-        #: Trust environment settings for proxy configuration, default
-        #: authentication and similar.
+        #: .. Trust environment settings for proxy configuration, default
+        #:    authentication and similar.
+        #:
+        #: プロキシ設定、デフォルトの認証等の信頼できる環境変数。
         self.trust_env = True
 
         #: .. A CookieJar containing all currently outstanding cookies set on this
@@ -424,13 +454,21 @@ class Session(SessionRedirectMixin):
         self.close()
 
     def prepare_request(self, request):
-        """Constructs a :class:`PreparedRequest <PreparedRequest>` for
-        transmission and returns it. The :class:`PreparedRequest` has settings
-        merged from the :class:`Request <Request>` instance and those of the
-        :class:`Session`.
+        """
+        .. Constructs a :class:`PreparedRequest <PreparedRequest>` for
+           transmission and returns it. The :class:`PreparedRequest` has settings
+           merged from the :class:`Request <Request>` instance and those of the
+           :class:`Session`.
 
-        :param request: :class:`Request` instance to prepare with this
-            session's settings.
+        送信のための :class:`PreparedRequest <PreparedRequest>` を生成し、返却します。
+        :class:`PreparedRequest` は、:class:`Request <Request>` インスタンスと
+        :class:`Session` の設定がマージされます。
+
+        .. :param request: :class:`Request` instance to prepare with this
+        ..     session's settings.
+        .. :rtype: requests.PreparedRequest
+
+        :param request: このセッションの設定で準備する :class:`Request` のインスタンス。
         :rtype: requests.PreparedRequest
         """
         cookies = request.cookies or {}
@@ -602,7 +640,7 @@ class Session(SessionRedirectMixin):
 
         :param url: 新しく作成した :class:`Request` オブジェクトのURL。
         :param data: (任意) :class:`Request` のボティで送信するディクショナリ、バイトデータ、ファイル形式のオブジェクト。
-        :param json: (任意) :class:`Request` のボティで送信するJSON。
+        :param json: (任意) :class:`Request` のボティで送信する JSON データ。
         :param \*\*kwargs: ``request`` が受け取る任意の引数。
         :rtype: requests.Response
         """
@@ -665,7 +703,10 @@ class Session(SessionRedirectMixin):
         return self.request('DELETE', url, **kwargs)
 
     def send(self, request, **kwargs):
-        """Send a given PreparedRequest.
+        """
+        .. Send a given PreparedRequest.
+
+        渡された PreparedRequest を送信します。
 
         :rtype: requests.Response
         """
@@ -739,7 +780,9 @@ class Session(SessionRedirectMixin):
 
     def merge_environment_settings(self, url, proxies, stream, verify, cert):
         """
-        Check the environment and merge it with some settings.
+        .. Check the environment and merge it with some settings.
+
+        環境変数を確認しながら、いくつかの設定をマージします。
 
         :rtype: dict
         """
@@ -792,9 +835,14 @@ class Session(SessionRedirectMixin):
             v.close()
 
     def mount(self, prefix, adapter):
-        """Registers a connection adapter to a prefix.
+        """
+        .. Registers a connection adapter to a prefix.
 
-        Adapters are sorted in descending order by prefix length.
+        プレフィックスに接続のためのアダプタを登録します。
+
+        .. Adapters are sorted in descending order by prefix length.
+
+        アダプタはプレフィックスの長さによって降順にソートされます。
         """
         self.adapters[prefix] = adapter
         keys_to_move = [k for k in self.adapters if len(k) < len(prefix)]

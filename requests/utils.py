@@ -401,9 +401,14 @@ def add_dict_to_cookiejar(cj, cookie_dict):
 
 
 def get_encodings_from_content(content):
-    """Returns encodings from given content string.
+    """
+    .. Returns encodings from given content string.
 
-    :param content: bytestring to extract encodings from.
+    渡したコンテンツの文字列からエンコーディングを取得して返却する。
+
+    .. :param content: bytestring to extract encodings from.
+
+    :param content: エンコーディングを取得するためのバイト列。
     """
     warnings.warn((
         'In requests 3.0, get_encodings_from_content will be removed. For '
@@ -421,9 +426,15 @@ def get_encodings_from_content(content):
 
 
 def get_encoding_from_headers(headers):
-    """Returns encodings from given HTTP Header Dict.
+    """
+    .. Returns encodings from given HTTP Header Dict.
 
-    :param headers: dictionary to extract encoding from.
+    渡した HTTP ヘッダーのディクショナリからエンコーディングを取得して返却します。
+
+    .. :param headers: dictionary to extract encoding from.
+    .. :rtype: str
+
+    :param headers: エンコーディングを取得するためのディクショナリ。
     :rtype: str
     """
 
@@ -470,14 +481,24 @@ def iter_slices(string, slice_length):
 
 
 def get_unicode_from_response(r):
-    """Returns the requested content back in unicode.
+    """
+    .. Returns the requested content back in unicode.
 
-    :param r: Response object to get unicode content from.
+    リクエストしたコンテンツを Unicode で返却します。
 
-    Tried:
+    .. :param r: Response object to get unicode content from.
 
-    1. charset from content-type
-    2. fall back and replace all unicode characters
+    :param r: Unicode コンテンツを取得するためのレスポンスのオブジェクト。
+
+    .. Tried:
+
+    以下の処理を試します。:
+
+    .. charset from content-type
+    .. fall back and replace all unicode characters
+
+    1. コンテンツタイプの charset
+    2. 全ての Unicode 文字を置き換えて、fall back します。
 
     :rtype: str
     """
