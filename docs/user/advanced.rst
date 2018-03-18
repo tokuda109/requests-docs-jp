@@ -18,16 +18,26 @@
 .. Session Objects
    ---------------
 
-The Session object allows you to persist certain parameters across
-requests. It also persists cookies across all requests made from the
-Session instance, and will use ``urllib3``'s `connection pooling`_. So if
-you're making several requests to the same host, the underlying TCP
-connection will be reused, which can result in a significant performance
-increase (see `HTTP persistent connection`_).
+.. The Session object allows you to persist certain parameters across
+   requests. It also persists cookies across all requests made from the
+   Session instance, and will use ``urllib3``'s `connection pooling`_. So if
+   you're making several requests to the same host, the underlying TCP
+   connection will be reused, which can result in a significant performance
+   increase (see `HTTP persistent connection`_).
 
-A Session object has all the methods of the main Requests API.
+Session オブジェクトは特定のパラメータをリクエスト間で永続化することができます。
+``urllib3`` の `connection pooling`_ を使って、
+Session インスタンスの全てのリクエストで Cookie が永続化することもできます。
+したがって、同じホストに対して複数のリクエストを行う場合、基になる TCP 接続が再利用されるため、
+パフォーマンスが大幅に向上します(`HTTP persistent connection`_ を参照して下さい)。
 
-Let's persist some cookies across requests::
+.. A Session object has all the methods of the main Requests API.
+
+Session オブジェクトには、Requests の主な API の全てのメソッドがあります。
+
+.. Let's persist some cookies across requests::
+
+リクエスト間に渡る Cookie の永続化をやってみましょう::
 
     s = requests.Session()
 
@@ -38,8 +48,11 @@ Let's persist some cookies across requests::
     # '{"cookies": {"sessioncookie": "123456789"}}'
 
 
-Sessions can also be used to provide default data to the request methods. This
-is done by providing data to the properties on a Session object::
+.. Sessions can also be used to provide default data to the request methods. This
+   is done by providing data to the properties on a Session object::
+
+セッションはリクエストのメソッドにデフォルトデータを提供するためにも使用することができます。
+これは Session オブジェクトのプロパティにデータを提供することに行われます。::
 
     s = requests.Session()
     s.auth = ('user', 'pass')
@@ -49,13 +62,19 @@ is done by providing data to the properties on a Session object::
     s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
 
 
-Any dictionaries that you pass to a request method will be merged with the
-session-level values that are set. The method-level parameters override session
-parameters.
+.. Any dictionaries that you pass to a request method will be merged with the
+   session-level values that are set. The method-level parameters override session
+   parameters.
 
-Note, however, that method-level parameters will *not* be persisted across
-requests, even if using a session. This example will only send the cookies
-with the first request, but not the second::
+リクエストのメソッドに渡す任意のディクショナリは、設定されたセッションレベルの値とマージされます。
+メソッドレベルのパラメータは、セッションパラメータを上書きします。
+
+.. Note, however, that method-level parameters will *not* be persisted across
+   requests, even if using a session. This example will only send the cookies
+   with the first request, but not the second::
+
+注意することとして、セッションを使ってもメソッドレベルのパラメータはリクエスト間で**永続化されません**。
+以下の例では、最初のリクエストで Cookie を送信しますが、二回目は送信しません。::
 
     s = requests.Session()
 
@@ -68,18 +87,25 @@ with the first request, but not the second::
     # '{"cookies": {}}'
 
 
-If you want to manually add cookies to your session, use the
-:ref:`Cookie utility functions <api-cookies>` to manipulate
-:attr:`Session.cookies <requests.Session.cookies>`.
+.. If you want to manually add cookies to your session, use the
+   :ref:`Cookie utility functions <api-cookies>` to manipulate
+   :attr:`Session.cookies <requests.Session.cookies>`.
 
-Sessions can also be used as context managers::
+セッションに Cookie を手動で追加する場合、:ref:`Cookie utility functions <api-cookies>` を使って、
+:attr:`Session.cookies <requests.Session.cookies>` を操作します。
+
+.. Sessions can also be used as context managers::
+
+セッションはコンテキストマネージャーとしても使えます。::
 
     with requests.Session() as s:
         s.get('http://httpbin.org/cookies/set/sessioncookie/123456789')
 
-This will make sure the session is closed as soon as the ``with`` block is
-exited, even if unhandled exceptions occurred.
+.. This will make sure the session is closed as soon as the ``with`` block is
+   exited, even if unhandled exceptions occurred.
 
+これにより、例外が処理できなかったとしても、
+``with`` ブロックが終了するとすぐにセッションを閉じることを保証しています。
 
 .. admonition:: Remove a Value From a Dict Parameter
 
@@ -87,25 +113,40 @@ exited, even if unhandled exceptions occurred.
     do this, you simply set that key's value to ``None`` in the method-level
     parameter. It will automatically be omitted.
 
-All values that are contained within a session are directly available to you.
-See the :ref:`Session API Docs <sessionapi>` to learn more.
+.. All values that are contained within a session are directly available to you.
+   See the :ref:`Session API Docs <sessionapi>` to learn more.
+
+セッションに含まれている全ての値を直接アクセスすることができます。
+詳しくは、:ref:`Session API Docs <sessionapi>` を参照して下さい。
 
 .. _request-and-response-objects:
 
-Request and Response Objects
-----------------------------
+リクエストとレスポンスのオブジェクト
+--------------------------------------------------------
 
-Whenever a call is made to ``requests.get()`` and friends, you are doing two
-major things. First, you are constructing a ``Request`` object which will be
-sent off to a server to request or query some resource. Second, a ``Response``
-object is generated once Requests gets a response back from the server.
-The ``Response`` object contains all of the information returned by the server and
-also contains the ``Request`` object you created originally. Here is a simple
-request to get some very important information from Wikipedia's servers::
+.. Request and Response Objects
+   ----------------------------
+
+.. Whenever a call is made to ``requests.get()`` and friends, you are doing two
+   major things. First, you are constructing a ``Request`` object which will be
+   sent off to a server to request or query some resource. Second, a ``Response``
+   object is generated once Requests gets a response back from the server.
+   The ``Response`` object contains all of the information returned by the server and
+   also contains the ``Request`` object you created originally. Here is a simple
+   request to get some very important information from Wikipedia's servers::
+
+``requests.get()`` や類似のメソッドを呼び出すたびに、2つの主要なことをしていることになります。
+まず、``Request`` オブジェクトを生成して、リソースをサーバーに要求するために送信します。
+次に、Requests がサーバーからのレスポンスを受け取ると ``Response`` オブジェクトが生成されます。
+``Response`` オブジェクトは、サーバーから返却された情報が全て含まれていて、
+元となった ``Request`` オブジェクトも含まれています。
+以下は、Wikipedia のサーバーからいくつかのとても重要な情報を取得するためのシンプルなリクエストです。::
 
     >>> r = requests.get('http://en.wikipedia.org/wiki/Monty_Python')
 
-If we want to access the headers the server sent back to us, we do this::
+.. If we want to access the headers the server sent back to us, we do this::
+
+サーバーから返却されたヘッダーにアクセスするには以下のようにします。::
 
     >>> r.headers
     {'content-length': '56170', 'x-content-type-options': 'nosniff', 'x-cache':
@@ -117,8 +158,10 @@ If we want to access the headers the server sent back to us, we do this::
     'text/html; charset=UTF-8', 'x-cache-lookup': 'HIT from cp1006.eqiad.wmnet:3128,
     MISS from cp1010.eqiad.wmnet:80'}
 
-However, if we want to get the headers we sent the server, we simply access the
-request, and then the request's headers::
+.. However, if we want to get the headers we sent the server, we simply access the
+   request, and then the request's headers::
+
+しかし、サーバーから返却されたヘッダーを取得する場合は、リクエストにアクセスし、リクエストのヘッダーにアクセスするだけです。::
 
     >>> r.request.headers
     {'Accept-Encoding': 'identity, deflate, compress, gzip',
@@ -129,11 +172,16 @@ request, and then the request's headers::
 Prepared Requests
 -----------------
 
-Whenever you receive a :class:`Response <requests.Response>` object
-from an API call or a Session call, the ``request`` attribute is actually the
-``PreparedRequest`` that was used. In some cases you may wish to do some extra
-work to the body or headers (or anything else really) before sending a
-request. The simple recipe for this is the following::
+.. Whenever you receive a :class:`Response <requests.Response>` object
+   from an API call or a Session call, the ``request`` attribute is actually the
+   ``PreparedRequest`` that was used. In some cases you may wish to do some extra
+   work to the body or headers (or anything else really) before sending a
+   request. The simple recipe for this is the following::
+
+API や Session の呼び出して :class:`Response <requests.Response>` オブジェクトを受け取るたびに、
+``request`` 属性は、``PreparedRequest`` です。
+場合によって、リクエストを送信する前にボディやヘッダー(または他のもの)に追加作業をしたいことがあります。
+簡単なやりかたは以下のとおりです。::
 
     from requests import Request, Session
 
@@ -158,19 +206,28 @@ request. The simple recipe for this is the following::
 
     print(resp.status_code)
 
-Since you are not doing anything special with the ``Request`` object, you
-prepare it immediately and modify the ``PreparedRequest`` object. You then
-send that with the other parameters you would have sent to ``requests.*`` or
-``Session.*``.
+.. Since you are not doing anything special with the ``Request`` object, you
+   prepare it immediately and modify the ``PreparedRequest`` object. You then
+   send that with the other parameters you would have sent to ``requests.*`` or
+   ``Session.*``.
 
-However, the above code will lose some of the advantages of having a Requests
-:class:`Session <requests.Session>` object. In particular,
-:class:`Session <requests.Session>`-level state such as cookies will
-not get applied to your request. To get a
-:class:`PreparedRequest <requests.PreparedRequest>` with that state
-applied, replace the call to :meth:`Request.prepare()
-<requests.Request.prepare>` with a call to
-:meth:`Session.prepare_request() <requests.Session.prepare_request>`, like this::
+``Request`` オブジェクトは特別なことを何もしていないので、すぐに``PreparedRequest`` オブジェクト
+それから ``requests.*`` や ``Session.*`` に送信した他のパラメータとともに送信します。
+
+.. However, the above code will lose some of the advantages of having a Requests
+   :class:`Session <requests.Session>` object. In particular,
+   :class:`Session <requests.Session>`-level state such as cookies will
+   not get applied to your request. To get a
+   :class:`PreparedRequest <requests.PreparedRequest>` with that state
+   applied, replace the call to :meth:`Request.prepare()
+   <requests.Request.prepare>` with a call to
+   :meth:`Session.prepare_request() <requests.Session.prepare_request>`, like this::
+
+しかし、上記のコードは Requests の :class:`Session <requests.Session>` オブジェクトの利点をいくつか失います。
+特に、Cookie のような :class:`Session <requests.Session>` レベルの状態についてはリクエストに適用されません。
+その状態が適用された :class:`PreparedRequest <requests.PreparedRequest>` を得るには、
+:meth:`Request.prepare() <requests.Request.prepare>` を呼び出して、以下のように
+:meth:`Session.prepare_request() <requests.Session.prepare_request>` を呼び出すことで置換します。::
 
     from requests import Request, Session
 
@@ -200,23 +257,34 @@ applied, replace the call to :meth:`Request.prepare()
 SSL Cert Verification
 ---------------------
 
-Requests verifies SSL certificates for HTTPS requests, just like a web browser.
-By default, SSL verification is enabled, and Requests will throw a SSLError if
-it's unable to verify the certificate::
+.. Requests verifies SSL certificates for HTTPS requests, just like a web browser.
+   By default, SSL verification is enabled, and Requests will throw a SSLError if
+   it's unable to verify the certificate::
+
+Requests は、ウェブブラウザと同様に、HTTPS のリクエストの際に、SSL 証明書を検証します。
+デフォルトでは、SSL 証明書の検証が有効になっていて、Requests が証明書を検証できなかった場合、
+SSLError を送出します。
 
     >>> requests.get('https://requestb.in')
     requests.exceptions.SSLError: hostname 'requestb.in' doesn't match either of '*.herokuapp.com', 'herokuapp.com'
 
-I don't have SSL setup on this domain, so it throws an exception. Excellent. GitHub does though::
+.. I don't have SSL setup on this domain, so it throws an exception. Excellent. GitHub does though::
+
+このドメインの SSL のセットアップを持っていないので、例外が送出されます。
+いいですね。GitHub does though::
 
     >>> requests.get('https://github.com')
     <Response [200]>
 
-You can pass ``verify`` the path to a CA_BUNDLE file or directory with certificates of trusted CAs::
+.. You can pass ``verify`` the path to a CA_BUNDLE file or directory with certificates of trusted CAs::
+
+信頼できる認証局の証明書の CA_BUNDLE ファイルかディレクトリへのパスを ``verify`` に渡すことができます。::
 
     >>> requests.get('https://github.com', verify='/path/to/certfile')
 
-or persistent::
+.. or persistent::
+
+もしくは永続化するには::
 
     s = requests.Session()
     s.verify = '/path/to/certfile'
@@ -224,31 +292,47 @@ or persistent::
 .. note:: If ``verify`` is set to a path to a directory, the directory must have been processed using
   the c_rehash utility supplied with OpenSSL.
 
-This list of trusted CAs can also be specified through the ``REQUESTS_CA_BUNDLE`` environment variable.
+.. This list of trusted CAs can also be specified through the ``REQUESTS_CA_BUNDLE`` environment variable.
 
-Requests can also ignore verifying the SSL certificate if you set ``verify`` to False::
+信頼できる認証局のリストは、``REQUESTS_CA_BUNDLE`` の環境変数で指定することもできます。
+
+.. Requests can also ignore verifying the SSL certificate if you set ``verify`` to False::
+
+``verify`` を False にした場合、Requests は SSL 証明書の検証を無視します。::
 
     >>> requests.get('https://kennethreitz.org', verify=False)
     <Response [200]>
 
-By default, ``verify`` is set to True. Option ``verify`` only applies to host certs.
+.. By default, ``verify`` is set to True. Option ``verify`` only applies to host certs.
 
-Client Side Certificates
-------------------------
+デフォルトでは、``verify`` は True に設定されています。オプションの ``verify`` はホスト証明書にのみ適用されます。
 
-You can also specify a local cert to use as client side certificate, as a single
-file (containing the private key and the certificate) or as a tuple of both
-files' paths::
+.. Client Side Certificates
+   ------------------------
+
+クライアント側の証明書
+---------------------------
+
+.. You can also specify a local cert to use as client side certificate, as a single
+   file (containing the private key and the certificate) or as a tuple of both
+   files' paths::
+
+1ファイル(秘密鍵と証明書を含む)として指定するか、両ファイルのタプルとして指定するかで
+クライアント側の証明書として使用するローカルの証明書を指定することができます。::
 
     >>> requests.get('https://kennethreitz.org', cert=('/path/client.cert', '/path/client.key'))
     <Response [200]>
 
-or persistent::
+.. or persistent::
+
+もしくは永続化するには::
 
     s = requests.Session()
     s.cert = '/path/client.cert'
 
-If you specify a wrong path or an invalid cert, you'll get a SSLError::
+.. If you specify a wrong path or an invalid cert, you'll get a SSLError::
+
+間違ったパスや無効な証明書を指定すると、SSLError が送出されます。::
 
     >>> requests.get('https://kennethreitz.org', cert='/wrong_path/client.pem')
     SSLError: [Errno 336265225] _ssl.c:347: error:140B0009:SSL routines:SSL_CTX_use_PrivateKey_file:PEM lib
@@ -652,55 +736,90 @@ RFCs where that compliance will not cause difficulties for users. This
 attention to the specification can lead to some behaviour that may seem
 unusual to those not familiar with the relevant specification.
 
-Encodings
-^^^^^^^^^
+.. Encodings
+   ^^^^^^^^^
 
-When you receive a response, Requests makes a guess at the encoding to
-use for decoding the response when you access the :attr:`Response.text
-<requests.Response.text>` attribute. Requests will first check for an
-encoding in the HTTP header, and if none is present, will use `chardet
-<http://pypi.python.org/pypi/chardet>`_ to attempt to guess the encoding.
+エンコーディング
+^^^^^^^^^^^^^^^^^^
 
-The only time Requests will not do this is if no explicit charset
-is present in the HTTP headers **and** the ``Content-Type``
-header contains ``text``. In this situation, `RFC 2616
-<http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_ specifies
-that the default charset must be ``ISO-8859-1``. Requests follows the
-specification in this case. If you require a different encoding, you can
-manually set the :attr:`Response.encoding <requests.Response.encoding>`
-property, or use the raw :attr:`Response.content <requests.Response.content>`.
+.. When you receive a response, Requests makes a guess at the encoding to
+   use for decoding the response when you access the :attr:`Response.text
+   <requests.Response.text>` attribute. Requests will first check for an
+   encoding in the HTTP header, and if none is present, will use `chardet
+   <http://pypi.python.org/pypi/chardet>`_ to attempt to guess the encoding.
+
+レスポンスを受け取った際、:attr:`Response.text <requests.Response.text>` 属性にアクセスした時に、
+レスポンスをデコードするために、Requests はエンコーディングを推測します。
+Requests はまず HTTP ヘッダーのエンコーディングをチェックし、存在しない場合はエンコーディングを推測するために
+`chardet <http://pypi.python.org/pypi/chardet>`_ を使います。
+
+.. The only time Requests will not do this is if no explicit charset
+   is present in the HTTP headers **and** the ``Content-Type``
+   header contains ``text``. In this situation, `RFC 2616
+   <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_ specifies
+   that the default charset must be ``ISO-8859-1``. Requests follows the
+   specification in this case. If you require a different encoding, you can
+   manually set the :attr:`Response.encoding <requests.Response.encoding>`
+   property, or use the raw :attr:`Response.content <requests.Response.content>`.
+
+Requests がこのようにしない場合として、HTTP ヘッダーに明確な文字コードがなく、``Content-Type`` ヘッダーに ``text`` が含まれている場合です。
+この状況で `RFC 2616 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_ は、
+デフォルトの文字コードが ``ISO-8859-1`` になっていることが想定されています。
+この場合、Requests は仕様に従います。別のエンコーディングが必要な場合は、
+:attr:`Response.encoding <requests.Response.encoding>` プロパティを手動で設定するか、
+生データの :attr:`Response.content <requests.Response.content>` を使用することができます。
 
 .. _http-verbs:
 
-HTTP Verbs
-----------
+.. HTTP Verbs
+   ----------
 
-Requests provides access to almost the full range of HTTP verbs: GET, OPTIONS,
-HEAD, POST, PUT, PATCH and DELETE. The following provides detailed examples of
-using these various verbs in Requests, using the GitHub API.
+HTTP メソッド
+--------------------
 
-We will begin with the verb most commonly used: GET. HTTP GET is an idempotent
-method that returns a resource from a given URL. As a result, it is the verb
-you ought to use when attempting to retrieve data from a web location. An
-example usage would be attempting to get information about a specific commit
-from GitHub. Suppose we wanted commit ``a050faf`` on Requests. We would get it
-like so::
+.. Requests provides access to almost the full range of HTTP verbs: GET, OPTIONS,
+   HEAD, POST, PUT, PATCH and DELETE. The following provides detailed examples of
+   using these various verbs in Requests, using the GitHub API.
+
+Requests は、GET、OPTIONS、HEAD、POST、PUT、PATCH、DELETE
+のほぼ全ての HTTP メソッドにアクセスすることができます。
+GitHub の API を使って、このメソッドを Requests で使う例を以下で紹介します。
+
+.. We will begin with the verb most commonly used: GET. HTTP GET is an idempotent
+   method that returns a resource from a given URL. As a result, it is the verb
+   you ought to use when attempting to retrieve data from a web location. An
+   example usage would be attempting to get information about a specific commit
+   from GitHub. Suppose we wanted commit ``a050faf`` on Requests. We would get it
+   like so::
+
+最も一般的に使われる GET の HTTP メソッドで始めましょう。
+HTTP の GET は、指定された URL からリソースを受け取る冪等のメソッドです。
+その結果、ウェブのロケーションからデータを取得しようとするときに使う HTTP メソッドです。
+サンプル例で GitHub から特定のコミットに関する情報を取得しようとするものです。
+Requests の ``a050faf`` のコミットを取得したいとします。
+以下のようにするとできます。::
 
     >>> import requests
     >>> r = requests.get('https://api.github.com/repos/requests/requests/git/commits/a050faf084662f3a352dd1a941f2c7c9f886d4ad')
 
-We should confirm that GitHub responded correctly. If it has, we want to work
-out what type of content it is. Do this like so::
+.. We should confirm that GitHub responded correctly. If it has, we want to work
+   out what type of content it is. Do this like so::
+
+GitHub が正しく応答したことを確認する必要があります。
+正しければ、どのようなタイプのコンテンツだったかの処理をしたいと思います。
+以下のようにします。::
 
     >>> if r.status_code == requests.codes.ok:
     ...     print(r.headers['content-type'])
     ...
     application/json; charset=utf-8
 
-So, GitHub returns JSON. That's great, we can use the :meth:`r.json
-<requests.Response.json>` method to parse it into Python objects.
+.. So, GitHub returns JSON. That's great, we can use the :meth:`r.json
+   <requests.Response.json>` method to parse it into Python objects.::
 
-::
+したがって、GitHub は JSON を返却します。
+素晴らしいことですが、:meth:`r.json <requests.Response.json>` メソッドを使って解析することで、
+Python のオブジェクトにします。::
 
     >>> commit_data = r.json()
 
@@ -713,39 +832,52 @@ So, GitHub returns JSON. That's great, we can use the :meth:`r.json
     >>> print(commit_data[u'message'])
     makin' history
 
-So far, so simple. Well, let's investigate the GitHub API a little bit. Now,
-we could look at the documentation, but we might have a little more fun if we
-use Requests instead. We can take advantage of the Requests OPTIONS verb to
-see what kinds of HTTP methods are supported on the url we just used.
+.. So far, so simple. Well, let's investigate the GitHub API a little bit. Now,
+   we could look at the documentation, but we might have a little more fun if we
+   use Requests instead. We can take advantage of the Requests OPTIONS verb to
+   see what kinds of HTTP methods are supported on the url we just used.::
 
-::
+これまでのところ、とても簡単です。次は GitHub の API について少し調べてみましょう。
+ドキュメントを見ることができますが、代わりに Requests を使ってみるとさらに面白いかもしれません。
+Requests の OPTIONS の HTTP メソッドを利用して、今リクエストした URL でサポートしている HTTP メソッドの種類を確認することができます。::
 
     >>> verbs = requests.options(r.url)
     >>> verbs.status_code
     500
 
-Uh, what? That's unhelpful! Turns out GitHub, like many API providers, don't
-actually implement the OPTIONS method. This is an annoying oversight, but it's
-OK, we can just use the boring documentation. If GitHub had correctly
-implemented OPTIONS, however, they should return the allowed methods in the
-headers, e.g.
+.. Uh, what? That's unhelpful! Turns out GitHub, like many API providers, don't
+   actually implement the OPTIONS method. This is an annoying oversight, but it's
+   OK, we can just use the boring documentation. If GitHub had correctly
+   implemented OPTIONS, however, they should return the allowed methods in the
+   headers, e.g.::
 
-::
+ええっと、何が起こったのでしょう?
+使えませんね!
+多くの API プロバイダと同様に、GitHub は実際には OPTIONS メソッドを実装していません。
+見落としていましたが、問題ありません。
+ドキュメントで確認することができます。
+しかし、GitHub が正しく OPTIONS を実装しているなら、ヘッダーで許可するメソッドを返却しないといけません。
 
     >>> verbs = requests.options('http://a-good-website.com/api/cats')
     >>> print(verbs.headers['allow'])
     GET,HEAD,POST,OPTIONS
 
-Turning to the documentation, we see that the only other method allowed for
-commits is POST, which creates a new commit. As we're using the Requests repo,
-we should probably avoid making ham-handed POSTS to it. Instead, let's play
-with the Issues feature of GitHub.
+.. Turning to the documentation, we see that the only other method allowed for
+   commits is POST, which creates a new commit. As we're using the Requests repo,
+   we should probably avoid making ham-handed POSTS to it. Instead, let's play
+   with the Issues feature of GitHub.
 
-This documentation was added in response to
-`Issue #482 <https://github.com/requests/requests/issues/482>`_. Given that
-this issue already exists, we will use it as an example. Let's start by getting it.
+ドキュメントに目を向けると、コミットで許可している唯一のメソッドは POST で、
+これは新しいコミットを作成することを意味しています。
+Requests のリポジトリを使っているので、ham-handed POSTS を作成することは避けて下さい。
+代わりに GitHub の Issues 機能を試してみましょう。
 
-::
+.. This documentation was added in response to
+   `Issue #482 <https://github.com/requests/requests/issues/482>`_. Given that
+   this issue already exists, we will use it as an example. Let's start by getting it.::
+
+この文章は、`Issue #482 <https://github.com/requests/requests/issues/482>`_ に対応するために追加されました。
+この問題は、既知の問題なので例として使います。再現してみましょう。::
 
     >>> r = requests.get('https://api.github.com/repos/requests/requests/issues/482')
     >>> r.status_code
@@ -759,9 +891,9 @@ this issue already exists, we will use it as an example. Let's start by getting 
     >>> print(issue[u'comments'])
     3
 
-Cool, we have three comments. Let's take a look at the last of them.
+.. Cool, we have three comments. Let's take a look at the last of them.::
 
-::
+Cool、コメントが3つあります。コメントの最後を見てみましょう。::
 
     >>> r = requests.get(r.url + u'/comments')
     >>> r.status_code
@@ -776,18 +908,18 @@ Cool, we have three comments. Let's take a look at the last of them.
     Probably in the "advanced" section
 
 Well, that seems like a silly place. Let's post a comment telling the poster
-that he's silly. Who is the poster, anyway?
-
-::
+that he's silly. Who is the poster, anyway?::
 
     >>> print(comments[2][u'user'][u'login'])
     kennethreitz
 
-OK, so let's tell this Kenneth guy that we think this example should go in the
-quickstart guide instead. According to the GitHub API doc, the way to do this
-is to POST to the thread. Let's do it.
+.. OK, so let's tell this Kenneth guy that we think this example should go in the
+   quickstart guide instead. According to the GitHub API doc, the way to do this
+   is to POST to the thread. Let's do it.::
 
-::
+この例をクイックスタートのガイドに入れることを Kenneth に伝えましょう。
+GitHub の API のドキュメントによると、これを行う方法はスレッドに POST することです。
+やってみましょう。::
 
     >>> body = json.dumps({u"body": u"Sounds great! I'll get right on it!"})
     >>> url = u"https://api.github.com/repos/requests/requests/issues/482/comments"
