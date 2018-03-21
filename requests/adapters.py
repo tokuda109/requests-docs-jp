@@ -50,31 +50,52 @@ DEFAULT_POOL_TIMEOUT = None
 
 
 class BaseAdapter(object):
-    """The Base Transport Adapter"""
+    """
+    .. The Base Transport Adapter
+
+    ベースのトランスポートアダプタ。
+    """
 
     def __init__(self):
         super(BaseAdapter, self).__init__()
 
     def send(self, request, stream=False, timeout=None, verify=True,
              cert=None, proxies=None):
-        """Sends PreparedRequest object. Returns Response object.
+        """
+        .. Sends PreparedRequest object. Returns Response object.
 
-        :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
-        :param stream: (optional) Whether to stream the request content.
-        :param timeout: (optional) How long to wait for the server to send
-            data before giving up, as a float, or a :ref:`(connect timeout,
-            read timeout) <timeouts>` tuple.
+        PreparedRequest オブジェクトを送信します。Response オブジェクトを返却します。
+
+        .. :param request: The :class:`PreparedRequest <PreparedRequest>` being sent.
+        .. :param stream: (optional) Whether to stream the request content.
+        .. :param timeout: (optional) How long to wait for the server to send
+        ..     data before giving up, as a float, or a :ref:`(connect timeout,
+        ..     read timeout) <timeouts>` tuple.
+        .. :type timeout: float or tuple
+        .. :param verify: (optional) Either a boolean, in which case it controls whether we verify
+        ..     the server's TLS certificate, or a string, in which case it must be a path
+        ..     to a CA bundle to use
+        .. :param cert: (optional) Any user-provided SSL certificate to be trusted.
+        .. :param proxies: (optional) The proxies dictionary to apply to the request.
+
+        :param request: :class:`PreparedRequest <PreparedRequest>` が送信されます。
+        :param stream: (任意) リクエストのコンテンツをストリーミングするかどうか。
+        :param timeout: (任意) サーバーからのデータ返却をどれくらい待つかを float か :ref:`(connect timeout, read timeout) <timeouts>` のタプルで指定します。
         :type timeout: float or tuple
         :param verify: (optional) Either a boolean, in which case it controls whether we verify
             the server's TLS certificate, or a string, in which case it must be a path
             to a CA bundle to use
-        :param cert: (optional) Any user-provided SSL certificate to be trusted.
-        :param proxies: (optional) The proxies dictionary to apply to the request.
+        :param cert: (任意) 信頼できるユーザーが提供している SSL 証明書。
+        :param proxies: (任意) リクエストに付与するプロキシのディクショナリ。
         """
         raise NotImplementedError
 
     def close(self):
-        """Cleans up adapter specific items."""
+        """
+        .. Cleans up adapter specific items.
+
+        アダプタ特有の項目の後片付けをします。
+        """
         raise NotImplementedError
 
 
@@ -84,23 +105,39 @@ class HTTPAdapter(BaseAdapter):
 
     urllib3 用の組み込みの HTTP アダプタ。
 
-    Provides a general-case interface for Requests sessions to contact HTTP and
-    HTTPS urls by implementing the Transport Adapter interface. This class will
-    usually be created by the :class:`Session <Session>` class under the
-    covers.
+    .. Provides a general-case interface for Requests sessions to contact HTTP and
+       HTTPS urls by implementing the Transport Adapter interface. This class will
+       usually be created by the :class:`Session <Session>` class under the
+       covers.
 
-    :param pool_connections: The number of urllib3 connection pools to cache.
-    :param pool_maxsize: The maximum number of connections to save in the pool.
-    :param max_retries: The maximum number of retries each connection
-        should attempt. Note, this applies only to failed DNS lookups, socket
-        connections and connection timeouts, never to requests where data has
-        made it to the server. By default, Requests does not retry failed
-        connections. If you need granular control over the conditions under
-        which we retry a request, import urllib3's ``Retry`` class and pass
-        that instead.
-    :param pool_block: Whether the connection pool should block for connections.
+    Requests のセッションがトランスポートアダプタのインターフェースを実装することによって、
+    HTTP と HTTPS の URL に接続するための一般的なユースケースで使うインターフェースを提供しています。
+    このクラスは通常、:class:`Session <Session>` クラスと使うために作成されます。
 
-    Usage::
+    .. :param pool_connections: The number of urllib3 connection pools to cache.
+    .. :param pool_maxsize: The maximum number of connections to save in the pool.
+    .. :param max_retries: The maximum number of retries each connection
+    ..     should attempt. Note, this applies only to failed DNS lookups, socket
+    ..     connections and connection timeouts, never to requests where data has
+    ..     made it to the server. By default, Requests does not retry failed
+    ..     connections. If you need granular control over the conditions under
+    ..     which we retry a request, import urllib3's ``Retry`` class and pass
+    ..     that instead.
+    .. :param pool_block: Whether the connection pool should block for connections.
+
+    :param pool_connections: キャッシュする urllib3 のコネクションプールの数。
+    :param pool_maxsize: コネクションプールに保存する接続の最大数。
+    :param max_retries: それぞれの接続が試行する最大回数。
+        これは、失敗した DNS ルックアップ、ソケット接続、コネクションのタイムアウトのみ適用され、
+        サーバーに送信したリクエストのデータには適用されません。
+        デフォルトでは、Requests は失敗した接続の再試行をしません。
+        リクエストを再試行する条件を細かく制御する必要がある場合、urllib3 の ``Retry``
+        クラスをインポートし、代わりとして渡します。
+    :param pool_block: コネクションプールが接続をブロックするかどうか。
+
+    .. Usage
+
+    使い方::
 
       >>> import requests
       >>> s = requests.Session()
@@ -202,16 +239,28 @@ class HTTPAdapter(BaseAdapter):
         return manager
 
     def cert_verify(self, conn, url, verify, cert):
-        """Verify a SSL certificate. This method should not be called from user
-        code, and is only exposed for use when subclassing the
-        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+        """
+        .. Verify a SSL certificate. This method should not be called from user
+           code, and is only exposed for use when subclassing the
+           :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
 
-        :param conn: The urllib3 connection object associated with the cert.
-        :param url: The requested URL.
+        SSL 証明書を検証します。
+        このメソッドは、使用者のコードから呼び出されるべきではなくて、
+        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>` をサブクラス化して使う時のみ公開されます。
+
+        .. :param conn: The urllib3 connection object associated with the cert.
+        .. :param url: The requested URL.
+        .. :param verify: Either a boolean, in which case it controls whether we verify
+        ..     the server's TLS certificate, or a string, in which case it must be a path
+        ..     to a CA bundle to use
+        .. :param cert: The SSL certificate to verify.
+
+        :param conn: 証明書に関連付けられた urllib3 のコネクションオブジェクト。
+        :param url: リクエストした URL 。
         :param verify: Either a boolean, in which case it controls whether we verify
             the server's TLS certificate, or a string, in which case it must be a path
             to a CA bundle to use
-        :param cert: The SSL certificate to verify.
+        :param cert: 検証する SSL 証明書。
         """
         if url.lower().startswith('https') and verify:
 
@@ -254,13 +303,21 @@ class HTTPAdapter(BaseAdapter):
                               "invalid path: {0}".format(conn.key_file))
 
     def build_response(self, req, resp):
-        """Builds a :class:`Response <requests.Response>` object from a urllib3
-        response. This should not be called from user code, and is only exposed
-        for use when subclassing the
-        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`
+        """
+        .. Builds a :class:`Response <requests.Response>` object from a urllib3
+           response. This should not be called from user code, and is only exposed
+           for use when subclassing the
+           :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`
 
-        :param req: The :class:`PreparedRequest <PreparedRequest>` used to generate the response.
-        :param resp: The urllib3 response object.
+        urllib3 のレスポンスから :class:`Response <requests.Response>` オブジェクトを構築します。
+        これは、使用者のコードから呼び出されるべきではなくて、:class:`HTTPAdapter <requests.adapters.HTTPAdapter>` をサブクラス化して使う時のみ公開されます。
+
+        .. :param req: The :class:`PreparedRequest <PreparedRequest>` used to generate the response.
+        .. :param resp: The urllib3 response object.
+        .. :rtype: requests.Response
+
+        :param req: レスポンスを生成するための :class:`PreparedRequest <PreparedRequest>` 。
+        :param resp: urllib3 レスポンスオブジェクト。
         :rtype: requests.Response
         """
         response = Response()
@@ -353,16 +410,28 @@ class HTTPAdapter(BaseAdapter):
         return url
 
     def add_headers(self, request, **kwargs):
-        """Add any headers needed by the connection. As of v2.0 this does
-        nothing by default, but is left for overriding by users that subclass
-        the :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+        """
+        .. Add any headers needed by the connection. As of v2.0 this does
+           nothing by default, but is left for overriding by users that subclass
+           the :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
 
-        This should not be called from user code, and is only exposed for use
-        when subclassing the
-        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+        接続に必要なヘッダーを追加します。
+        v2.0 では、デフォルトでは何もしませんが、
+        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>` をサブクラスとして、
+        上書きするために残されています。
 
-        :param request: The :class:`PreparedRequest <PreparedRequest>` to add headers to.
-        :param kwargs: The keyword arguments from the call to send().
+        .. This should not be called from user code, and is only exposed for use
+           when subclassing the
+           :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+
+        これは使用者のコードから呼び出されるべきではなくて、
+        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>` をサブクラス化して使う時のみ公開されます。
+
+        .. :param request: The :class:`PreparedRequest <PreparedRequest>` to add headers to.
+        .. :param kwargs: The keyword arguments from the call to send().
+
+        :param request: ヘッダーに追加するための :class:`PreparedRequest <PreparedRequest>`。
+        :param kwargs: send() から呼び出された時に渡ってくるキーワード引数。
         """
         pass
 

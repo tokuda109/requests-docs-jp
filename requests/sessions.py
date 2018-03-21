@@ -261,14 +261,21 @@ class SessionRedirectMixin(object):
         return
 
     def rebuild_proxies(self, prepared_request, proxies):
-        """This method re-evaluates the proxy configuration by considering the
-        environment variables. If we are redirected to a URL covered by
-        NO_PROXY, we strip the proxy configuration. Otherwise, we set missing
-        proxy keys for this URL (in case they were stripped by a previous
-        redirect).
+        """
+        .. This method re-evaluates the proxy configuration by considering the
+           environment variables. If we are redirected to a URL covered by
+           NO_PROXY, we strip the proxy configuration. Otherwise, we set missing
+           proxy keys for this URL (in case they were stripped by a previous
+           redirect).
 
-        This method also replaces the Proxy-Authorization header where
-        necessary.
+        このメソッドは環境変数を考慮して、プロキシの設定を再評価します。
+        NO_PROXY でカバーしている URL にリダイレクトした場合、プロキシの設定を削除します。
+        それ以外の場合、この URL にプロキシのキーがないことを設定します。(以前のリダイレクトによって削除された場合)
+
+        .. This method also replaces the Proxy-Authorization header where
+           necessary.
+
+        このメソッドは必要に応じて、Proxy-Authorization ヘッダーも置換します。
 
         :rtype: dict
         """
@@ -505,40 +512,66 @@ class Session(SessionRedirectMixin):
             params=None, data=None, headers=None, cookies=None, files=None,
             auth=None, timeout=None, allow_redirects=True, proxies=None,
             hooks=None, stream=None, verify=None, cert=None, json=None):
-        """Constructs a :class:`Request <Request>`, prepares it and sends it.
-        Returns :class:`Response <Response>` object.
+        """
+        .. Constructs a :class:`Request <Request>`, prepares it and sends it.
+           Returns :class:`Response <Response>` object.
 
-        :param method: method for the new :class:`Request` object.
-        :param url: URL for the new :class:`Request` object.
-        :param params: (optional) Dictionary or bytes to be sent in the query
-            string for the :class:`Request`.
-        :param data: (optional) Dictionary, bytes, or file-like object to send
-            in the body of the :class:`Request`.
-        :param json: (optional) json to send in the body of the
-            :class:`Request`.
-        :param headers: (optional) Dictionary of HTTP Headers to send with the
-            :class:`Request`.
-        :param cookies: (optional) Dict or CookieJar object to send with the
-            :class:`Request`.
-        :param files: (optional) Dictionary of ``'filename': file-like-objects``
-            for multipart encoding upload.
-        :param auth: (optional) Auth tuple or callable to enable
-            Basic/Digest/Custom HTTP Auth.
-        :param timeout: (optional) How long to wait for the server to send
-            data before giving up, as a float, or a :ref:`(connect timeout,
-            read timeout) <timeouts>` tuple.
+        :class:`Request <Request>` を生成し、送信するための準備をします。
+        :class:`Response <Response>` オブジェクトを返却します。
+
+        .. :param method: method for the new :class:`Request` object.
+        .. :param url: URL for the new :class:`Request` object.
+        .. :param params: (optional) Dictionary or bytes to be sent in the query
+        ..     string for the :class:`Request`.
+        .. :param data: (optional) Dictionary, bytes, or file-like object to send
+        ..     in the body of the :class:`Request`.
+        .. :param json: (optional) json to send in the body of the
+        ..     :class:`Request`.
+        .. :param headers: (optional) Dictionary of HTTP Headers to send with the
+        ..     :class:`Request`.
+        .. :param cookies: (optional) Dict or CookieJar object to send with the
+        ..     :class:`Request`.
+        .. :param files: (optional) Dictionary of ``'filename': file-like-objects``
+        ..     for multipart encoding upload.
+        .. :param auth: (optional) Auth tuple or callable to enable
+        ..     Basic/Digest/Custom HTTP Auth.
+        .. :param timeout: (optional) How long to wait for the server to send
+        ..     data before giving up, as a float, or a :ref:`(connect timeout,
+        ..     read timeout) <timeouts>` tuple.
+        .. :type timeout: float or tuple
+        .. :param allow_redirects: (optional) Set to True by default.
+        .. :type allow_redirects: bool
+        .. :param proxies: (optional) Dictionary mapping protocol or protocol and
+        ..     hostname to the URL of the proxy.
+        .. :param stream: (optional) whether to immediately download the response
+        ..     content. Defaults to ``False``.
+        .. :param verify: (optional) Either a boolean, in which case it controls whether we verify
+        ..     the server's TLS certificate, or a string, in which case it must be a path
+        ..     to a CA bundle to use. Defaults to ``True``.
+        .. :param cert: (optional) if String, path to ssl client cert file (.pem).
+        ..     If Tuple, ('cert', 'key') pair.
+        .. :rtype: requests.Response
+
+        :param method: 新しく作成した :class:`Request` オブジェクトの HTTP メソッド。
+        :param url: 新しく作成した :class:`Request` オブジェクトのURL。
+        :param params: (任意) :class:`Request` のクエリ文字列として送信されるディクショナリ、もしくはバイトデータ。
+        :param data: (任意) :class:`Request` のボディとして送信するディクショナリ、
+            もしくは(フォームエンコードされた) ``[(key, value)]`` 形式のタプルの一覧、バイトデータ、ファイル形式のオブジェクト。
+        :param json: (任意) :class:`Request` のボディとして送信する JSON データ。
+        :param headers: (任意) :class:`Request` と一緒に送信するための HTTP ヘッダーのディクショナリ。
+        :param cookies: (任意) :class:`Request` と一緒に送信するためのディクショナリか CookieJar オブジェクト。
+        :param files: (任意) マルチパートのエンコーディングアップロードのための ``'filename': file-like-objects`` のディクショナリ。
+        :param auth: (任意) Basic / Digest / 独自の HTTP 認証を有効にするためのタプル、もしくは呼び出し可能なオブジェクト。
+        :param timeout: (任意) サーバーからのデータ返却をどれくらい待つかを float か :ref:`(connect timeout, read timeout) <timeouts>` のタプルで指定します。
         :type timeout: float or tuple
-        :param allow_redirects: (optional) Set to True by default.
+        :param allow_redirects: (任意) デフォルトでは True に設定されています。
         :type allow_redirects: bool
-        :param proxies: (optional) Dictionary mapping protocol or protocol and
-            hostname to the URL of the proxy.
-        :param stream: (optional) whether to immediately download the response
-            content. Defaults to ``False``.
+        :param proxies: (任意) プロキシの URL にプロトコルやホスト名をマッピングするディクショナリ。
+        :param stream: (任意) レスポンスのコンテンツをすぐにダウンロードするかどうかを指定します。デフォルトは ``False`` です。
         :param verify: (optional) Either a boolean, in which case it controls whether we verify
             the server's TLS certificate, or a string, in which case it must be a path
             to a CA bundle to use. Defaults to ``True``.
-        :param cert: (optional) if String, path to ssl client cert file (.pem).
-            If Tuple, ('cert', 'key') pair.
+        :param cert: (任意) 文字列の場合は、SSL 証明書(.pem)へのパス。タプルの場合は、('cert', 'key') のペア。
         :rtype: requests.Response
         """
         # Create the Request.

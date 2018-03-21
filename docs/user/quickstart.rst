@@ -394,7 +394,9 @@ may better fit your use cases.
 フォームエンコードされていないデータを送信したい場合がよくあります。
 ``dict`` の代わりに ``string`` を渡すと、そのデータは直接ポストされます。
 
-For example, the GitHub API v3 accepts JSON-Encoded POST/PATCH data::
+.. For example, the GitHub API v3 accepts JSON-Encoded POST/PATCH data::
+
+例として、GitHub の API の V3 では JSON エンコードされた POST/PATCH データを受け取ります。::
 
     >>> import json
 
@@ -403,8 +405,11 @@ For example, the GitHub API v3 accepts JSON-Encoded POST/PATCH data::
 
     >>> r = requests.post(url, data=json.dumps(payload))
 
-Instead of encoding the ``dict`` yourself, you can also pass it directly using
-the ``json`` parameter (added in version 2.4.2) and it will be encoded automatically::
+.. Instead of encoding the ``dict`` yourself, you can also pass it directly using
+   the ``json`` parameter (added in version 2.4.2) and it will be encoded automatically::
+
+``dict`` を自身でエンコードする代わりに、(バージョン 2.4.2 で追加された) ``json`` パラメータに直接渡すこともできます。
+渡すと自動でエンコードされます。::
 
     >>> url = 'https://api.github.com/some/endpoint'
     >>> payload = {'some': 'data'}
@@ -412,10 +417,15 @@ the ``json`` parameter (added in version 2.4.2) and it will be encoded automatic
     >>> r = requests.post(url, json=payload)
 
 
-POST a Multipart-Encoded File
------------------------------
+.. POST a Multipart-Encoded File
+   -----------------------------
 
-Requests makes it simple to upload Multipart-encoded files::
+マルチパートエンコードされたファイルの POST
+----------------------------------------------
+
+.. Requests makes it simple to upload Multipart-encoded files::
+
+Requests は、マルチパートエンコードされたファイルを簡単にアップロードすることができます。::
 
     >>> url = 'http://httpbin.org/post'
     >>> files = {'file': open('report.xls', 'rb')}
@@ -430,7 +440,9 @@ Requests makes it simple to upload Multipart-encoded files::
       ...
     }
 
-You can set the filename, content_type and headers explicitly::
+.. You can set the filename, content_type and headers explicitly::
+
+ファイル名、コンテントタイプ、ヘッダーを明示的に設定できます。::
 
     >>> url = 'http://httpbin.org/post'
     >>> files = {'file': ('report.xls', open('report.xls', 'rb'), 'application/vnd.ms-excel', {'Expires': '0'})}
@@ -445,7 +457,9 @@ You can set the filename, content_type and headers explicitly::
       ...
     }
 
-If you want, you can send strings to be received as files::
+.. If you want, you can send strings to be received as files::
+
+必要に応じて、ファイルとして受け取る文字列を送信することができます。::
 
     >>> url = 'http://httpbin.org/post'
     >>> files = {'file': ('report.csv', 'some,data,to,send\nanother,row,to,send\n')}
@@ -460,20 +474,32 @@ If you want, you can send strings to be received as files::
       ...
     }
 
-In the event you are posting a very large file as a ``multipart/form-data``
-request, you may want to stream the request. By default, ``requests`` does not
-support this, but there is a separate package which does -
-``requests-toolbelt``. You should read `the toolbelt's documentation
-<https://toolbelt.readthedocs.io>`_ for more details about how to use it.
+.. In the event you are posting a very large file as a ``multipart/form-data``
+   request, you may want to stream the request. By default, ``requests`` does not
+   support this, but there is a separate package which does -
+   ``requests-toolbelt``. You should read `the toolbelt's documentation
+   <https://toolbelt.readthedocs.io>`_ for more details about how to use it.
 
-For sending multiple files in one request refer to the :ref:`advanced <advanced>`
-section.
+非常に大きなファイルを ``multipart/form-data`` のリクエストとして送信する場合、
+リクエストをストリームとして送信する必要があります。
+デフォルトでは、``requests`` はこれをサポートしていませんが、別のパッケージで ``requests-toolbelt`` というのがあります。
+使い方の詳細については、`toolbelt のドキュメント <https://toolbelt.readthedocs.io>`_ を参照して下さい。
 
-.. warning:: It is strongly recommended that you open files in `binary mode`_.
-             This is because Requests may attempt to provide the
-             ``Content-Length`` header for you, and if it does this value will
-             be set to the number of *bytes* in the file. Errors may occur if
-             you open the file in *text mode*.
+.. For sending multiple files in one request refer to the :ref:`advanced <advanced>`
+   section.
+
+1つのリクエストで複数のファイルを送信するには、:ref:`advanced <advanced>` の章を参照して下さい。
+
+.. warning It is strongly recommended that you open files in `binary mode`_.
+           This is because Requests may attempt to provide the
+           ``Content-Length`` header for you, and if it does this value will
+           be set to the number of *bytes* in the file. Errors may occur if
+           you open the file in *text mode*.
+
+.. warning:: `binary mode`_ でファイルを開くことを強くお勧めします。
+             これは、Requests が ``Content-Length`` ヘッダーを提供しようとする可能性があり、
+             その場合、この値はファイルのバイト数に設定されるからです。
+             *text mode* でファイルを開くと、エラーが発生することがあります。
 
 .. _binary mode: https://docs.python.org/2/tutorial/inputoutput.html#reading-and-writing-files
 
@@ -559,7 +585,9 @@ Python のディクショナリで実装されたサーバーのレスポンス�
 ディクショナリとはいえ特別で、HTTP ヘッダーのためだけに実装されています。
 `RFC 7230 <http://tools.ietf.org/html/rfc7230#section-3.2>`_ によると、HTTP ヘッダーは大文字と小文字を区別しません。
 
-So, we can access the headers using any capitalization we want::
+.. So, we can access the headers using any capitalization we want::
+
+よって、任意の文字に大文字を使ってヘッダーにアクセスすることができます。::
 
     >>> r.headers['Content-Type']
     'application/json'
@@ -567,10 +595,14 @@ So, we can access the headers using any capitalization we want::
     >>> r.headers.get('content-type')
     'application/json'
 
-It is also special in that the server could have sent the same header multiple
-times with different values, but requests combines them so they can be
-represented in the dictionary within a single mapping, as per
-`RFC 7230 <http://tools.ietf.org/html/rfc7230#section-3.2>`_:
+.. It is also special in that the server could have sent the same header multiple
+   times with different values, but requests combines them so they can be
+   represented in the dictionary within a single mapping, as per
+   `RFC 7230 <http://tools.ietf.org/html/rfc7230#section-3.2>`_:
+
+サーバーが異なる値で同じヘッダーを複数回送信する可能性もありますが、
+Requests は、`RFC 7230 <http://tools.ietf.org/html/rfc7230#section-3.2>`_ に従って、
+単一のマッピング内のディクショナリで表現できるように結合します。
 
     A recipient MAY combine multiple header fields with the same field name
     into one "field-name: field-value" pair, without changing the semantics
@@ -753,4 +785,7 @@ Requests が明示的に発生させる全ての例外は、:exc:`requests.excep
 
 -----------------------
 
-Ready for more? Check out the :ref:`advanced <advanced>` section.
+.. Ready for more? Check out the :ref:`advanced <advanced>` section.
+
+準備できましたか？
+:ref:`advanced <advanced>` の章をチェックして下さい。
