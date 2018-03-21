@@ -227,9 +227,9 @@ class Request(RequestHooksMixin):
     :param method: 使用する HTTP メソッド。
     :param url: 送信する URL。
     :param headers: 送信するヘッダーのディクショナリ。
-    :param files: dictionary of {filename: fileobject} files to multipart upload.
-    :param data: リクエストに付与するボディ。 If a dictionary is provided, form-encoding will take place.
-    :param json: json for the body to attach to the request (if files or data is not specified).
+    :param files: マルチパートのアップロードをするための {filename: fileobject} 形式のディクショナリ。
+    :param data: リクエストに付与するボディ。ディクショナリとして提供されている場合、フォームエンコードされます。
+    :param json: (ファイル、もしくはデータが指定されていない場合)リクエストに付与する JSON のボディ。
     :param params: URL に追加するための URL パラメータのディクショナリ。
     :param auth: 認証用のヘッダーか (user, pass) のタプル。
     :param cookies: このリクエストオブジェクトに付与する Cookie のディクショナリか CookieJar。
@@ -680,9 +680,12 @@ class Response(object):
         #: Integer Code of responded HTTP Status, e.g. 404 or 200.
         self.status_code = None
 
-        #: Case-insensitive Dictionary of Response Headers.
-        #: For example, ``headers['content-encoding']`` will return the
-        #: value of a ``'Content-Encoding'`` response header.
+        #: .. Case-insensitive Dictionary of Response Headers.
+        #:    For example, ``headers['content-encoding']`` will return the
+        #:    value of a ``'Content-Encoding'`` response header.
+        #:
+        #: 大文字と小文字を区別しないレスポンスヘッダーのディクショナリ。
+        #: 例として、``headers['content-encoding']`` は ``'Content-Encoding'`` のレスポンスヘッダーの値を返却します。
         self.headers = CaseInsensitiveDict()
 
         #: File-like object representation of response (for advanced usage).
@@ -698,9 +701,13 @@ class Response(object):
         #: r.text アクセスする時にデコードするエンコーディング。
         self.encoding = None
 
-        #: A list of :class:`Response <Response>` objects from
-        #: the history of the Request. Any redirect responses will end
-        #: up here. The list is sorted from the oldest to the most recent request.
+        #: .. A list of :class:`Response <Response>` objects from
+        #:    the history of the Request. Any redirect responses will end
+        #:    up here. The list is sorted from the oldest to the most recent request.
+        #:
+        #: Request の履歴にある :class:`Response <Response>` オブジェクトの一覧。
+        #: リダイレクトのレスポンスはここには含まれません。
+        #: リストはリクエストの古い順から新しい順の順番になっています。
         self.history = []
 
         #: Textual reason of responded HTTP Status, e.g. "Not Found" or "OK".
@@ -711,12 +718,16 @@ class Response(object):
         #: サーバーから返却された Cookie の CookieJar。
         self.cookies = cookiejar_from_dict({})
 
-        #: The amount of time elapsed between sending the request
-        #: and the arrival of the response (as a timedelta).
-        #: This property specifically measures the time taken between sending
-        #: the first byte of the request and finishing parsing the headers. It
-        #: is therefore unaffected by consuming the response content or the
-        #: value of the ``stream`` keyword argument.
+        #: .. The amount of time elapsed between sending the request
+        #:    and the arrival of the response (as a timedelta).
+        #:    This property specifically measures the time taken between sending
+        #:    the first byte of the request and finishing parsing the headers. It
+        #:    is therefore unaffected by consuming the response content or the
+        #:    value of the ``stream`` keyword argument.
+        #:
+        #: リクエストを送信してからレスポンスが到着するまでの経過した時間(時間差)。
+        #: このプロパティはリクエストの最初のバイトを送信してからヘッダーをパースするまでの時間を計測します。
+        #: よって、レスポンスのコンテンツ、もしくは ``stream`` キーワード引数の値を操作することの影響は受けません。
         self.elapsed = datetime.timedelta(0)
 
         #: The :class:`PreparedRequest <PreparedRequest>` object to which this
@@ -792,19 +803,30 @@ class Response(object):
 
     @property
     def is_redirect(self):
-        """True if this Response is a well-formed HTTP redirect that could have
-        been processed automatically (by :meth:`Session.resolve_redirects`).
+        """
+        .. True if this Response is a well-formed HTTP redirect that could have
+           been processed automatically (by :meth:`Session.resolve_redirects`).
+
+        このレスポンスが、(:meth:`Session.resolve_redirects` による)自動的に処理された正しい形式の HTTP リダイレクトである場合は True を返します。
         """
         return ('location' in self.headers and self.status_code in REDIRECT_STATI)
 
     @property
     def is_permanent_redirect(self):
-        """True if this Response one of the permanent versions of redirect."""
+        """
+        .. True if this Response one of the permanent versions of redirect.
+
+        このレスポンスがリダイレクトの永続化するものであれば True を返します。
+        """
         return ('location' in self.headers and self.status_code in (codes.moved_permanently, codes.permanent_redirect))
 
     @property
     def next(self):
-        """Returns a PreparedRequest for the next request in a redirect chain, if there is one."""
+        """
+        .. Returns a PreparedRequest for the next request in a redirect chain, if there is one.
+
+        リダイレクト内の次のリクエストがある場合、PreparedRequest を返します。
+        """
         return self._next
 
     @property
@@ -965,10 +987,16 @@ class Response(object):
         return content
 
     def json(self, **kwargs):
-        r"""Returns the json-encoded content of a response, if any.
+        r"""
+        .. Returns the json-encoded content of a response, if any.
 
-        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
-        :raises ValueError: If the response body does not contain valid json.
+        JSON エンコードされたレスポンスのコンテンツを返します。
+
+        .. :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        .. :raises ValueError: If the response body does not contain valid json.
+
+        :param \*\*kwargs: ``json.loads`` に必要なオプショナルの引数。
+        :raises ValueError: レスポンスボディに有効な JSON が含まれていない場合。
         """
 
         if not self.encoding and self.content and len(self.content) > 3:
@@ -992,7 +1020,11 @@ class Response(object):
 
     @property
     def links(self):
-        """Returns the parsed header links of the response, if any."""
+        """
+        .. Returns the parsed header links of the response, if any.
+
+        レスポンスのパース済みのヘッダーのリンクがあれば返します。
+        """
 
         header = self.headers.get('link')
 
@@ -1009,7 +1041,11 @@ class Response(object):
         return l
 
     def raise_for_status(self):
-        """Raises stored :class:`HTTPError`, if one occurred."""
+        """
+        .. Raises stored :class:`HTTPError`, if one occurred.
+
+        :class:`HTTPError` があれば、:class:`HTTPError` を発生させます。
+        """
 
         http_error_msg = ''
         if isinstance(self.reason, bytes):
@@ -1034,10 +1070,16 @@ class Response(object):
             raise HTTPError(http_error_msg, response=self)
 
     def close(self):
-        """Releases the connection back to the pool. Once this method has been
-        called the underlying ``raw`` object must not be accessed again.
+        """
+        .. Releases the connection back to the pool. Once this method has been
+           called the underlying ``raw`` object must not be accessed again.
 
-        *Note: Should not normally need to be called explicitly.*
+        コネクションをプールに戻してリリースします。
+        このメソッドが呼び出されると、元の ``生`` のオブジェクトに再度アクセスするべきではありません。
+
+        .. *Note: Should not normally need to be called explicitly.*
+
+        *注意: 通常、明示的に呼び出す必要はありません。*
         """
         if not self._content_consumed:
             self.raw.close()

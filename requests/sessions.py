@@ -568,9 +568,8 @@ class Session(SessionRedirectMixin):
         :type allow_redirects: bool
         :param proxies: (任意) プロキシの URL にプロトコルやホスト名をマッピングするディクショナリ。
         :param stream: (任意) レスポンスのコンテンツをすぐにダウンロードするかどうかを指定します。デフォルトは ``False`` です。
-        :param verify: (optional) Either a boolean, in which case it controls whether we verify
-            the server's TLS certificate, or a string, in which case it must be a path
-            to a CA bundle to use. Defaults to ``True``.
+        :param verify: (任意) ブーリアンの場合、サーバーの TLS 証明書を検証するか文字列を検証するかを制御します。
+            この場合、使う認証局のバンドルへのパスでなければいけません。デフォルトは ``True`` 。
         :param cert: (任意) 文字列の場合は、SSL 証明書(.pem)へのパス。タプルの場合は、('cert', 'key') のペア。
         :rtype: requests.Response
         """

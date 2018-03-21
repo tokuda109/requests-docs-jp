@@ -55,20 +55,17 @@ def request(method, url, **kwargs):
     :param json: (任意) :class:`Request` のボディとして送信する JSON データ。
     :param headers: (任意) :class:`Request` と一緒に送信するための HTTP ヘッダーのディクショナリ。
     :param cookies: (任意) :class:`Request` と一緒に送信するためのディクショナリか CookieJar オブジェクト。
-    :param files: (optional) Dictionary of ``'name': file-like-objects`` (or ``{'name': file-tuple}``) for multipart encoding upload.
-        ``file-tuple`` can be a 2-tuple ``('filename', fileobj)``, 3-tuple ``('filename', fileobj, 'content_type')``
-        or a 4-tuple ``('filename', fileobj, 'content_type', custom_headers)``, where ``'content-type'`` is a string
-        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers
-        to add for the file.
+    :param files: (任意) マルチパートのエンコーディングアップロードのための ``'name': file-like-objects`` (もしくは、``{'name': file-tuple}``) のディクショナリ。
+        ``file-tuple`` は、``('filename', fileobj)`` 形式、``('filename', fileobj, 'content_type')`` 形式、``('filename', fileobj, 'content_type', custom_headers)`` 形式にできます。
+        ``'content-type'`` は指定されたファイルのコンテントタイプを定義する文字列で、``custom_headers`` はファイルに追加するヘッダーを含むディクショナリ形式のオブジェクトです。
     :param auth: (任意) Basic / Digest / 独自の HTTP 認証を有効にするためのタプル。
     :param timeout: (任意) サーバーからのデータ返却をどれくらい待つかを float か :ref:`(connect timeout, read timeout) <timeouts>` のタプルで指定します。
     :type timeout: float or tuple
     :param allow_redirects: (任意) ブーリアン。GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD のリダイレクトを有効/無効にします。デフォルトは ``True`` です。
     :type allow_redirects: bool
     :param proxies: (任意) プロキシへの URL にプロトコルをマッピングするためのディクショナリ。
-    :param verify: (任意) Either a boolean, in which case it controls whether we verify
-            the server's TLS certificate, or a string, in which case it must be a path
-            to a CA bundle to use. Defaults to ``True``.
+    :param verify: (任意) ブーリアンの場合、サーバーの TLS 証明書を検証するか文字列を検証するかを制御します。
+            この場合、使う認証局のバンドルへのパスでなければいけません。デフォルトは ``True`` 。
     :param stream: (任意) ``False`` の場合、レスポンスの内容はすぐにダウンロードが開始されます。
     :param cert: (任意) 文字列の場合は、SSL 証明書(.pem)へのパス。タプルの場合は、('cert', 'key') のペア。
     :return: :class:`Response <Response>` オブジェクト。
