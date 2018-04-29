@@ -171,7 +171,7 @@ Requests は他の認証方法を簡単で手っ取り早く拡張できるよ�
 Requests は独自の認証方法を簡単に追加することができます。
 
 .. To do so, subclass :class:`AuthBase <requests.auth.AuthBase>` and implement the
-  ``__call__()`` method::
+   ``__call__()`` method::
 
 実装するには、サブクラスを :class:`AuthBase <requests.auth.AuthBase>` にして、
 ``__call__()`` メソッドを実装して下さい。 ::

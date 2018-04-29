@@ -107,11 +107,17 @@ Session オブジェクトには、Requests の主な API の全てのメソッ�
 これにより、例外が処理できなかったとしても、
 ``with`` ブロックが終了するとすぐにセッションを閉じることを保証しています。
 
-.. admonition:: Remove a Value From a Dict Parameter
+.. Remove a Value From a Dict Parameter
 
     Sometimes you'll want to omit session-level keys from a dict parameter. To
     do this, you simply set that key's value to ``None`` in the method-level
     parameter. It will automatically be omitted.
+
+.. admonition:: 辞書パラメータから値の削除
+
+    場合によっては辞書パラメータからセッションレベルのキーを省略したい場合があります。
+    これをするには、メソッドレベルのパラメータでキーの値をシンプルに ``None`` を設定するだけです。
+    自動的に省略されます。
 
 .. All values that are contained within a session are directly available to you.
    See the :ref:`Session API Docs <sessionapi>` to learn more.
@@ -254,8 +260,11 @@ API や Session の呼び出して :class:`Response <requests.Response>` オブ�
 
 .. _verification:
 
-SSL Cert Verification
+SSL 証明書の検証
 ---------------------
+
+.. SSL Cert Verification
+   ---------------------
 
 .. Requests verifies SSL certificates for HTTPS requests, just like a web browser.
    By default, SSL verification is enabled, and Requests will throw a SSLError if
@@ -289,8 +298,10 @@ SSLError を送出します。
     s = requests.Session()
     s.verify = '/path/to/certfile'
 
-.. note:: If ``verify`` is set to a path to a directory, the directory must have been processed using
-  the c_rehash utility supplied with OpenSSL.
+.. If ``verify`` is set to a path to a directory, the directory must have been processed using
+   the c_rehash utility supplied with OpenSSL.
+
+.. note:: ``verify`` がディレクトリへのパスに設定されている場合、そのディレクトリは OpenSSL に付属の c_rehash ユーティリティを使用して処理されている必要があります。
 
 .. This list of trusted CAs can also be specified through the ``REQUESTS_CA_BUNDLE`` environment variable.
 
@@ -342,20 +353,32 @@ SSLError を送出します。
 
 .. _ca-certificates:
 
-CA Certificates
----------------
+認証局の証明書
+------------------
 
-By default, Requests bundles a set of root CAs that it trusts, sourced from the
-`Mozilla trust store`_. However, these are only updated once for each Requests
-version. This means that if you pin a Requests version your certificates can
-become extremely out of date.
+.. CA Certificates
+   ---------------
 
-From Requests version 2.4.0 onwards, Requests will attempt to use certificates
-from `certifi`_ if it is present on the system. This allows for users to update
-their trusted certificates without having to change the code that runs on their
-system.
+.. By default, Requests bundles a set of root CAs that it trusts, sourced from the
+   `Mozilla trust store`_. However, these are only updated once for each Requests
+   version. This means that if you pin a Requests version your certificates can
+   become extremely out of date.
 
-For the sake of security we recommend upgrading certifi frequently!
+デフォルトで、Requests は信頼できるルート認証局の一覧を `Mozilla trust store`_ から取得してバンドルしています。
+しかし、この一覧は Requests の各バージョンごとに一度更新されます。
+これは、Requests のバージョンを固定すると証明書が古くなってしまうかもしれないからです。
+
+.. From Requests version 2.4.0 onwards, Requests will attempt to use certificates
+   from `certifi`_ if it is present on the system. This allows for users to update
+   their trusted certificates without having to change the code that runs on their
+   system.
+
+Requests のバージョン2.4.0からは、証明書がシステム上にある場合は `certifi`_ からの証明書を使うことを試みます。
+これにより、システム上で実行されるコードを変更することなく、信頼できる証明書に更新することができます。
+
+.. For the sake of security we recommend upgrading certifi frequently!
+
+セキュリティのために、certifi を頻繁に更新することをお勧めします！
 
 .. _HTTP persistent connection: https://en.wikipedia.org/wiki/HTTP_persistent_connection
 .. _connection pooling: http://urllib3.readthedocs.io/en/latest/reference/index.html#module-urllib3.connectionpool
@@ -364,36 +387,60 @@ For the sake of security we recommend upgrading certifi frequently!
 
 .. _body-content-workflow:
 
-Body Content Workflow
----------------------
+ボディコンテンツのワークフロー
+--------------------------------------
 
-By default, when you make a request, the body of the response is downloaded
-immediately. You can override this behaviour and defer downloading the response
-body until you access the :attr:`Response.content <requests.Response.content>`
-attribute with the ``stream`` parameter::
+.. Body Content Workflow
+   ---------------------
+
+.. By default, when you make a request, the body of the response is downloaded
+   immediately. You can override this behaviour and defer downloading the response
+   body until you access the :attr:`Response.content <requests.Response.content>`
+   attribute with the ``stream`` parameter::
+
+デフォルトでは、リクエストを行うとレスポンスのボディをすぐにダウンロードします。
+この動作を上書きすることができ、:attr:`Response.content <requests.Response.content>` 属性に
+``stream`` パラメータを指定してアクセスするまでレスポンスのボディのダウンロードを遅らせることができます。
 
     tarball_url = 'https://github.com/requests/requests/tarball/master'
     r = requests.get(tarball_url, stream=True)
 
-At this point only the response headers have been downloaded and the connection
-remains open, hence allowing us to make content retrieval conditional::
+.. At this point only the response headers have been downloaded and the connection
+   remains open, hence allowing us to make content retrieval conditional::
+
+この時点で、レスポンスヘッダ−のみダウンロードされ、コネクションは接続したままのため、
+コンテンツの取得を条件付きで許可するようにすることができます。
 
     if int(r.headers['content-length']) < TOO_LONG:
       content = r.content
       ...
 
-You can further control the workflow by use of the :meth:`Response.iter_content() <requests.Response.iter_content>`
-and :meth:`Response.iter_lines() <requests.Response.iter_lines>` methods.
-Alternatively, you can read the undecoded body from the underlying
-urllib3 :class:`urllib3.HTTPResponse <urllib3.response.HTTPResponse>` at
-:attr:`Response.raw <requests.Response.raw>`.
+.. You can further control the workflow by use of the :meth:`Response.iter_content() <requests.Response.iter_content>`
+   and :meth:`Response.iter_lines() <requests.Response.iter_lines>` methods.
+   Alternatively, you can read the undecoded body from the underlying
+   urllib3 :class:`urllib3.HTTPResponse <urllib3.response.HTTPResponse>` at
+   :attr:`Response.raw <requests.Response.raw>`.
 
-If you set ``stream`` to ``True`` when making a request, Requests cannot
-release the connection back to the pool unless you consume all the data or call
-:meth:`Response.close <requests.Response.close>`. This can lead to
-inefficiency with connections. If you find yourself partially reading request
-bodies (or not reading them at all) while using ``stream=True``, you should
-make the request within a ``with`` statement to ensure it's always closed::
+:meth:`Response.iter_content() <requests.Response.iter_content>`、および
+:meth:`Response.iter_lines() <requests.Response.iter_lines>` メソッドを使うことで
+ワークフローをさらにコントロールすることができます。
+他の方法として、:attr:`Response.raw <requests.Response.raw>` にある
+urllib3 の :class:`urllib3.HTTPResponse <urllib3.response.HTTPResponse>` 配下にある
+デコードされていないボディを読むこともできます。
+
+.. If you set ``stream`` to ``True`` when making a request, Requests cannot
+   release the connection back to the pool unless you consume all the data or call
+   :meth:`Response.close <requests.Response.close>`. This can lead to
+   inefficiency with connections. If you find yourself partially reading request
+   bodies (or not reading them at all) while using ``stream=True``, you should
+   make the request within a ``with`` statement to ensure it's always closed::
+
+リクエストを行う時に ``stream`` に ``True`` を設定すると、全てのデータを消費するか、
+:meth:`Response.close <requests.Response.close>` を呼ばないかぎり、
+Requests はコネクションをプールして開放することができません。
+これによってコネクションを非効率にするかもしれません。
+``stream=True`` にしている間、リクエストのボデイを部分的に読み込む(または、まったく読み込まない)場合、
+``with`` 文内でリクエストを作成し、コネクションを閉じるようにする必要があります。::
 
     with requests.get('http://httpbin.org/get', stream=True) as r:
         # Do things with the response here.
@@ -422,33 +469,50 @@ make the request within a ``with`` statement to ensure it's always closed::
 
 .. _streaming-uploads:
 
-Streaming Uploads
------------------
+ストリーミングアップロード
+---------------------------
 
-Requests supports streaming uploads, which allow you to send large streams or
-files without reading them into memory. To stream and upload, simply provide a
-file-like object for your body::
+.. Streaming Uploads
+   -----------------
+
+.. Requests supports streaming uploads, which allow you to send large streams or
+   files without reading them into memory. To stream and upload, simply provide a
+   file-like object for your body::
+
+Requests はストリーミングアップロードをサポートしています。
+大きなストリームやファイルをメモリに読み込まずに送信することができます。
+ストリーミングとアップロードを行うには、ボディにファイル形式のオブジェクトをシンプルに提供するだけです。 ::
 
     with open('massive-body', 'rb') as f:
         requests.post('http://some.url/streamed', data=f)
 
-.. warning:: It is strongly recommended that you open files in `binary mode`_.
-             This is because Requests may attempt to provide the
-             ``Content-Length`` header for you, and if it does this value will
-             be set to the number of *bytes* in the file. Errors may occur if
-             you open the file in *text mode*.
+.. It is strongly recommended that you open files in `binary mode`_.
+   This is because Requests may attempt to provide the
+   ``Content-Length`` header for you, and if it does this value will
+   be set to the number of *bytes* in the file. Errors may occur if
+   you open the file in *text mode*.
+
+.. warning:: `binary mode`_ でファイルを開くことを強くお勧めしています。
+             これは Requests が ``Content-Length`` ヘッダーを提供しようとするので、
+             この値はファイルのバイト数に設定されるからです。
+             *text mode* でファイルを開くとエラーが発生する場合があります。
 
 .. _binary mode: https://docs.python.org/2/tutorial/inputoutput.html#reading-and-writing-files
 
-
 .. _chunk-encoding:
 
-Chunk-Encoded Requests
-----------------------
+チャンク形式のエンコードされたリクエスト
+--------------------------------------------
 
-Requests also supports Chunked transfer encoding for outgoing and incoming requests.
-To send a chunk-encoded request, simply provide a generator (or any iterator without
-a length) for your body::
+.. Chunk-Encoded Requests
+   ----------------------
+
+.. Requests also supports Chunked transfer encoding for outgoing and incoming requests.
+   To send a chunk-encoded request, simply provide a generator (or any iterator without
+   a length) for your body::
+
+Requests は入ってくるリクエストと出ていくリクエストのチャンク形式の転送エンコーディングもサポートしています。
+チャンク形式でエンコードされたリクエストを送信するには、ボディにジェネレータ(または長さを持たないイテレータ)を提供するだけです。::
 
     def gen():
         yield 'hi'
@@ -456,25 +520,38 @@ a length) for your body::
 
     requests.post('http://some.url/chunked', data=gen())
 
-For chunked encoded responses, it's best to iterate over the data using
-:meth:`Response.iter_content() <requests.Response.iter_content>`. In
-an ideal situation you'll have set ``stream=True`` on the request, in which
-case you can iterate chunk-by-chunk by calling ``iter_content`` with a ``chunk_size``
-parameter of ``None``. If you want to set a maximum size of the chunk,
-you can set a ``chunk_size`` parameter to any integer.
+.. For chunked encoded responses, it's best to iterate over the data using
+   :meth:`Response.iter_content() <requests.Response.iter_content>`. In
+   an ideal situation you'll have set ``stream=True`` on the request, in which
+   case you can iterate chunk-by-chunk by calling ``iter_content`` with a ``chunk_size``
+   parameter of ``None``. If you want to set a maximum size of the chunk,
+   you can set a ``chunk_size`` parameter to any integer.
 
+チャンク形式でエンコードされたレスポンスは、:meth:`Response.iter_content() <requests.Response.iter_content>` を
+使ってデータを反復処理することをお勧めします。
+理想的な状況として、リクエストで ``stream=True`` を設定してから、``chunk_size`` パラメータを
+``None`` にして ``iter_content`` を呼び出すことでチャンク単位で反復処理を行うことができます。
+チャンクの最大のサイズを設定する場合、``chunk_size`` パラメータを任意の整数で設定することが可能です。
 
 .. _multipart:
 
-POST Multiple Multipart-Encoded Files
--------------------------------------
+複数のマルチパートエンコードされたファイルのPOST
+-------------------------------------------------------
 
-You can send multiple files in one request. For example, suppose you want to
-upload image files to an HTML form with a multiple file field 'images'::
+.. POST Multiple Multipart-Encoded Files
+   -------------------------------------
+
+.. You can send multiple files in one request. For example, suppose you want to
+   upload image files to an HTML form with a multiple file field 'images'::
+
+1回のリクエストで複数のファイルを送信することができます。
+例えば、画像ファイルを複数のファイルフィールドの 'images' の HTML フォームにアップロードしたい場合::
 
     <input type="file" name="images" multiple="true" required="true"/>
 
-To do that, just set files to a list of tuples of ``(form_field_name, file_info)``::
+.. To do that, just set files to a list of tuples of ``(form_field_name, file_info)``::
+
+これを行うにはファイルを ``(form_field_name, file_info)`` のタプルのリストとして設定します。::
 
     >>> url = 'http://httpbin.org/post'
     >>> multiple_files = [
@@ -489,14 +566,18 @@ To do that, just set files to a list of tuples of ``(form_field_name, file_info)
       ...
     }
 
-.. warning:: It is strongly recommended that you open files in `binary mode`_.
-             This is because Requests may attempt to provide the
-             ``Content-Length`` header for you, and if it does this value will
-             be set to the number of *bytes* in the file. Errors may occur if
-             you open the file in *text mode*.
+.. It is strongly recommended that you open files in `binary mode`_.
+   This is because Requests may attempt to provide the
+   ``Content-Length`` header for you, and if it does this value will
+   be set to the number of *bytes* in the file. Errors may occur if
+   you open the file in *text mode*.
+
+.. warning:: `binary mode`_ でファイルを開くことを強くお勧めしています。
+             これは Requests が ``Content-Length`` ヘッダーを提供しようとするので、
+             この値はファイルのバイト数に設定されるからです。
+             *text mode* でファイルを開くとエラーが発生する場合があります。
 
 .. _binary mode: https://docs.python.org/2/tutorial/inputoutput.html#reading-and-writing-files
-
 
 .. _event-hooks:
 
@@ -728,13 +809,19 @@ Using the scheme ``socks5`` causes the DNS resolution to happen on the client, r
 
 .. _compliance:
 
-Compliance
-----------
+コンプライアンス
+--------------------
 
-Requests is intended to be compliant with all relevant specifications and
-RFCs where that compliance will not cause difficulties for users. This
-attention to the specification can lead to some behaviour that may seem
-unusual to those not familiar with the relevant specification.
+.. Compliance
+   ----------
+
+.. Requests is intended to be compliant with all relevant specifications and
+   RFCs where that compliance will not cause difficulties for users. This
+   attention to the specification can lead to some behaviour that may seem
+   unusual to those not familiar with the relevant specification.
+
+Requests は、コンプライアンスがユーザーに問題を引き起こさないようにするために、関連する仕様と RFC に準拠すること意図しています。
+この仕様の注意点として、関連する仕様に精通していない場合に不思議な挙動だと感じるかもしれません。
 
 .. Encodings
    ^^^^^^^^^
@@ -994,21 +1081,30 @@ kinds of exciting ways, 4995 more times.
 
 .. _custom-verbs:
 
-Custom Verbs
-------------
+独自の HTTP メソッド
+------------------------
 
-From time to time you may be working with a server that, for whatever reason,
-allows use or even requires use of HTTP verbs not covered above. One example of
-this would be the MKCOL method some WEBDAV servers use. Do not fret, these can
-still be used with Requests. These make use of the built-in ``.request``
-method. For example::
+.. Custom Verbs
+   ------------
+
+.. From time to time you may be working with a server that, for whatever reason,
+   allows use or even requires use of HTTP verbs not covered above. One example of
+   this would be the MKCOL method some WEBDAV servers use. Do not fret, these can
+   still be used with Requests. These make use of the built-in ``.request``
+   method. For example::
+
+ときには何らかの理由で、上記で扱われていない HTTP メソッドを使用する必要があったり、使用しているサーバーで作業する場合があります。
+この場合の1例として、一部の WEBDAV サーバーが使用している MKCOL 方式があります。
+心配しなくても、これらは Requests と一緒に使うことが可能です。
+これは組み込みの ``.request`` メソッドを使用します。例として::
 
     >>> r = requests.request('MKCOL', url, data=data)
     >>> r.status_code
     200 # Assuming your call was correct
 
-Utilising this, you can make use of any method verb that your server allows.
+.. Utilising this, you can make use of any method verb that your server allows.
 
+これを利用すると、サーバーが認めている任意の HTTP メソッドを使うことができます。
 
 .. _link-headers:
 
@@ -1036,40 +1132,63 @@ Requests will automatically parse these link headers and make them easily consum
 
 .. _transport-adapters:
 
-Transport Adapters
-------------------
+トランスポートアダプタ
+--------------------------
 
-As of v1.0.0, Requests has moved to a modular internal design. Part of the
-reason this was done was to implement Transport Adapters, originally
-`described here`_. Transport Adapters provide a mechanism to define interaction
-methods for an HTTP service. In particular, they allow you to apply per-service
-configuration.
+.. Transport Adapters
+   ------------------
 
-Requests ships with a single Transport Adapter, the :class:`HTTPAdapter
-<requests.adapters.HTTPAdapter>`. This adapter provides the default Requests
-interaction with HTTP and HTTPS using the powerful `urllib3`_ library. Whenever
-a Requests :class:`Session <requests.Session>` is initialized, one of these is
-attached to the :class:`Session <requests.Session>` object for HTTP, and one
-for HTTPS.
+.. As of v1.0.0, Requests has moved to a modular internal design. Part of the
+   reason this was done was to implement Transport Adapters, originally
+   `described here`_. Transport Adapters provide a mechanism to define interaction
+   methods for an HTTP service. In particular, they allow you to apply per-service
+   configuration.
 
-Requests enables users to create and use their own Transport Adapters that
-provide specific functionality. Once created, a Transport Adapter can be
-mounted to a Session object, along with an indication of which web services
-it should apply to.
+v1.0.0 以降、Requests はモジュール化された内部組み込みの設計に移行しました。
+これが行われた理由の１つとして、もともとは `described here`_ で説明したトランスポートアダプタを実装することです。
+トランスポートアダプタは、HTTP サービスで対話する方法を定義するメカニズムを提供します。
+特にサービスごとの設定を適用することが可能です。
+
+.. Requests ships with a single Transport Adapter, the :class:`HTTPAdapter
+   <requests.adapters.HTTPAdapter>`. This adapter provides the default Requests
+   interaction with HTTP and HTTPS using the powerful `urllib3`_ library. Whenever
+   a Requests :class:`Session <requests.Session>` is initialized, one of these is
+   attached to the :class:`Session <requests.Session>` object for HTTP, and one
+   for HTTPS.
+
+Requests は、トランスポートアダプタである :class:`HTTPAdapter <requests.adapters.HTTPAdapter>` が付属しています。
+このアダプタは強力な `urllib3`_ ライブラリを使って、HTTP と HTTPS とのデフォルトの Requests の対話を提供しています。
+Requests の :class:`Session <requests.Session>` が初期化すると、これらのうちの１つが
+HTTP の :class:`Session <requests.Session>` オブジェクトに、HTTPS の Session オブジェクトにアタッチされます。
+
+.. Requests enables users to create and use their own Transport Adapters that
+   provide specific functionality. Once created, a Transport Adapter can be
+   mounted to a Session object, along with an indication of which web services
+   it should apply to.
+
+Requests は、特定の機能を提供する独自のトランスポートアダプタを作成して、使うことが可能です。
+作成されたトランスポートアダプタは、どのウェブサービスを適用するかの指定を Session オブジェクトにマウントすることができます。
 
 ::
 
     >>> s = requests.Session()
     >>> s.mount('http://www.github.com', MyAdapter())
 
-The mount call registers a specific instance of a Transport Adapter to a
-prefix. Once mounted, any HTTP request made using that session whose URL starts
-with the given prefix will use the given Transport Adapter.
+.. The mount call registers a specific instance of a Transport Adapter to a
+   prefix. Once mounted, any HTTP request made using that session whose URL starts
+   with the given prefix will use the given Transport Adapter.
 
-Many of the details of implementing a Transport Adapter are beyond the scope of
-this documentation, but take a look at the next example for a simple SSL use-
-case. For more than that, you might look at subclassing the
-:class:`BaseAdapter <requests.adapters.BaseAdapter>`.
+mount の呼び出しをトランスポートアダプタの特定のインスタンスをプレフィックスに登録します。
+マウントされると、URL が指定されたプレフィックスで始まるセッションを使用して行われた HTTP リクエストは、
+指定されたトランスポートアダプタを使用します。
+
+.. Many of the details of implementing a Transport Adapter are beyond the scope of
+   this documentation, but take a look at the next example for a simple SSL use-
+   case. For more than that, you might look at subclassing the
+   :class:`BaseAdapter <requests.adapters.BaseAdapter>`.
+
+トランスポートアダプタを実装する詳細の多くは、このドキュメントの範囲を超えていますが、単純な SSL のユースケースの次の例を見て下さい。
+それ以上の場合は、:class:`BaseAdapter <requests.adapters.BaseAdapter>` のサブクラス化を参照して下さい。
 
 Example: Specific SSL Version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1103,29 +1222,53 @@ library to use SSLv3::
 
 .. _blocking-or-nonblocking:
 
-Blocking Or Non-Blocking?
--------------------------
+ブロッキングかノンブロッキングか？
+------------------------------------
 
-With the default Transport Adapter in place, Requests does not provide any kind
-of non-blocking IO. The :attr:`Response.content <requests.Response.content>`
-property will block until the entire response has been downloaded. If
-you require more granularity, the streaming features of the library (see
-:ref:`streaming-requests`) allow you to retrieve smaller quantities of the
-response at a time. However, these calls will still block.
+.. Blocking Or Non-Blocking?
+   -------------------------
 
-If you are concerned about the use of blocking IO, there are lots of projects
-out there that combine Requests with one of Python's asynchronicity frameworks.
-Two excellent examples are `grequests`_ and `requests-futures`_.
+.. With the default Transport Adapter in place, Requests does not provide any kind
+   of non-blocking IO. The :attr:`Response.content <requests.Response.content>`
+   property will block until the entire response has been downloaded. If
+   you require more granularity, the streaming features of the library (see
+   :ref:`streaming-requests`) allow you to retrieve smaller quantities of the
+   response at a time. However, these calls will still block.
+
+デフォルトのトランスポートアダプタを適切に設定すると、Requests はいかなる種類のノンブロッキングの IO も提供していません。
+:attr:`Response.content <requests.Response.content>` プロパティはレスポンス全体がダウンロードされるまでブロックされます。
+より細分化する必要があるなら、ライブラリのストリーミング機能(:ref:`streaming-requests` を参照)を使用して、
+一回に少しずつのレスポンスを受け取ることができます。
+しかし、これらの呼び出しはブロックされます。
+
+.. If you are concerned about the use of blocking IO, there are lots of projects
+   out there that combine Requests with one of Python's asynchronicity frameworks.
+   Two excellent examples are `grequests`_ and `requests-futures`_.
+
+ブロッキング IO を使うことが不安なら、Python の非同期フレームワークと Requests を組み合わせているプロジェクトがたくさんあります。
+`grequests`_ と `requests-futures`_ の2つはいい例です。
 
 .. _`grequests`: https://github.com/kennethreitz/grequests
 .. _`requests-futures`: https://github.com/ross/requests-futures
 
-Header Ordering
----------------
+.. Header Ordering
+   ---------------
 
-In unusual circumstances you may want to provide headers in an ordered manner. If you pass an ``OrderedDict`` to the ``headers`` keyword argument, that will provide the headers with an ordering. *However*, the ordering of the default headers used by Requests will be preferred, which means that if you override default headers in the ``headers`` keyword argument, they may appear out of order compared to other headers in that keyword argument.
+ヘッダーの順番
+------------------
 
-If this is problematic, users should consider setting the default headers on a :class:`Session <requests.Session>` object, by setting :attr:`Session <requests.Session.headers>` to a custom ``OrderedDict``. That ordering will always be preferred.
+.. In unusual circumstances you may want to provide headers in an ordered manner. If you pass an ``OrderedDict`` to the ``headers`` keyword argument, that will provide the headers with an ordering. *However*, the ordering of the default headers used by Requests will be preferred, which means that if you override default headers in the ``headers`` keyword argument, they may appear out of order compared to other headers in that keyword argument.
+
+特殊な状況では、順序を守ってヘッダーを提供しなければいけない場合があります。
+``headers`` キーワード引数に ``OrderedDict`` を渡すと、ヘッダーを順序を指定することができます。
+*しかし*、Requests で使用するデフォルトのヘッダーの順序が優先されます。
+つまり、``headers`` キーワード引数のデフォルトのヘッダーを上書きすると、
+そのキーワード引数の他のヘッダーと比較するので、順序がおかしくなるかもしれません。
+
+.. If this is problematic, users should consider setting the default headers on a :class:`Session <requests.Session>` object, by setting :attr:`Session <requests.Session.headers>` to a custom ``OrderedDict``. That ordering will always be preferred.
+
+これに問題がある場合は、:class:`Session <requests.Session>` オブジェクトのデフォルトヘッダーを設定することを検討してみてもいいかもしれません。
+設定した順序が優先されます。
 
 .. _timeouts:
 

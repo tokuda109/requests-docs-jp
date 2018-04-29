@@ -88,25 +88,41 @@ Python 3はサポートしていますか？
 * Python 3.6
 * PyPy
 
-What are "hostname doesn't match" errors?
------------------------------------------
+.. What are "hostname doesn't match" errors?
+   -----------------------------------------
 
-These errors occur when :ref:`SSL certificate verification <verification>`
-fails to match the certificate the server responds with to the hostname
-Requests thinks it's contacting. If you're certain the server's SSL setup is
-correct (for example, because you can visit the site with your browser) and
-you're using Python 2.6 or 2.7, a possible explanation is that you need
-Server-Name-Indication.
+"hostname doesn't match" というエラーは何ですか？
+--------------------------------------------------------
 
-`Server-Name-Indication`_, or SNI, is an official extension to SSL where the
-client tells the server what hostname it is contacting. This is important
-when servers are using `Virtual Hosting`_. When such servers are hosting
-more than one SSL site they need to be able to return the appropriate
-certificate based on the hostname the client is connecting to.
+.. These errors occur when :ref:`SSL certificate verification <verification>`
+   fails to match the certificate the server responds with to the hostname
+   Requests thinks it's contacting. If you're certain the server's SSL setup is
+   correct (for example, because you can visit the site with your browser) and
+   you're using Python 2.6 or 2.7, a possible explanation is that you need
+   Server-Name-Indication.
 
-Python3 and Python 2.7.9+ include native support for SNI in their SSL modules.
-For information on using SNI with Requests on Python < 2.7.9 refer to this
-`Stack Overflow answer`_.
+これらのエラーは、:ref:`SSL certificate verification <verification>` で、
+Requests がアクセス使用しているサーバーのホスト名の証明書と一致しない時に発生します。
+サーバーの SSL 設定が正しい(例として、ブラウザでサイトにアクセスできるか)ことが確認できた場合に、
+Python 2.6 か 2.7 を使っている場合は、Server-Name-Indication が必要です。
+
+.. `Server-Name-Indication`_, or SNI, is an official extension to SSL where the
+   client tells the server what hostname it is contacting. This is important
+   when servers are using `Virtual Hosting`_. When such servers are hosting
+   more than one SSL site they need to be able to return the appropriate
+   certificate based on the hostname the client is connecting to.
+
+`Server-Name-Indication`_ (SNI)は、クライアントがサーバーにどのホスト名に接続しているかを伝える SSL の正式な拡張です。
+サーバーが `Virtual Hosting`_ を使っている場合は、これは重要です。
+このようなサーバーが1つ以上の SSL サイトをホストしている場合、
+クライアントが接続しているホスト名に基いて適切な証明書を返却する必要があります。
+
+.. Python3 and Python 2.7.9+ include native support for SNI in their SSL modules.
+   For information on using SNI with Requests on Python < 2.7.9 refer to this
+   `Stack Overflow answer`_.
+
+Python3 と Python 2.7.9 以上には SSL モジュールの SNI のネイティブサポートが含まれています。
+Python 2.7.9 未満の Requests で SNI を使う方法については、`Stack Overflow answer`_ を参照して下さい。
 
 .. _`Server-Name-Indication`: https://en.wikipedia.org/wiki/Server_Name_Indication
 .. _`virtual hosting`: https://en.wikipedia.org/wiki/Virtual_hosting

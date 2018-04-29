@@ -1359,19 +1359,26 @@ This is not a backwards compatible change.
 0.7.1 (2011-10-23)
 ++++++++++++++++++
 
-* Move away from urllib2 authentication handling.
-* Fully Remove AuthManager, AuthObject, &c.
-* New tuple-based auth system with handler callbacks.
+.. Move away from urllib2 authentication handling.
+.. Fully Remove AuthManager, AuthObject, &c.
+.. New tuple-based auth system with handler callbacks.
 
+* Move away from urllib2 authentication handling.
+* AuthManager、AuthObject、cを完全に削除
+* ハンドラコールバックを持つタプルベースの認証システムを新しく追加
 
 0.7.0 (2011-10-22)
 ++++++++++++++++++
 
-* Sessions are now the primary interface.
-* Deprecated InvalidMethodException.
-* PATCH fix.
-* New config system (no more global settings).
+.. Sessions are now the primary interface.
+.. Deprecated InvalidMethodException.
+.. PATCH fix.
+.. New config system (no more global settings).
 
+* Sessions をメインのインターフェースに変更
+* InvalidMethodException を非推奨にした
+* PATCH のバグフィックス
+* 新しいコンフィグ機能（グローバルの設定はやめた）
 
 0.6.6 (2011-10-19)
 ++++++++++++++++++
@@ -1406,19 +1413,26 @@ This is not a backwards compatible change.
 0.6.2 (2011-10-09)
 ++++++++++++++++++
 
-* GET/HEAD obeys allow_redirects=False.
+.. GET/HEAD obeys allow_redirects=False.
 
+* GET/HEAD リクエストは allow_redirects=False に従います。
 
 0.6.1 (2011-08-20)
 ++++++++++++++++++
+
+.. Enhanced status codes experience ``\o/``
+.. Set a maximum number of redirects (``settings.max_redirects``)
+.. Full Unicode URL support
+.. Support for protocol-less redirects.
+.. Allow for arbitrary request types.
+.. Bugfixes
 
 * Enhanced status codes experience ``\o/``
 * Set a maximum number of redirects (``settings.max_redirects``)
 * Full Unicode URL support
 * Support for protocol-less redirects.
-* Allow for arbitrary request types.
-* Bugfixes
-
+* 任意のリクエストタイプを許可します。
+* バグフィックス
 
 0.6.0 (2011-08-17)
 ++++++++++++++++++

@@ -739,8 +739,7 @@ HEAD を使う場合、リダイレクトを有効にすることができます
       File "<stdin>", line 1, in <module>
     requests.exceptions.Timeout: HTTPConnectionPool(host='github.com', port=80): Request timed out. (timeout=0.001)
 
-
-.. admonition:: Note
+.. Note
 
     ``timeout`` is not a time limit on the entire response download;
     rather, an exception is raised if the server has not issued a
@@ -748,6 +747,12 @@ HEAD を使う場合、リダイレクトを有効にすることができます
     received on the underlying socket for ``timeout`` seconds). If no timeout is specified explicitly, requests do
     not time out.
 
+.. admonition:: Note
+
+    ``timeout`` は、レスポンスのダウンロード全体の時間制限ではありません。
+    むしろ、サーバーが ``timeout`` で指定した秒数(より正確には、``timeout`` で指定した秒数で下位ソケットで受信したバイトがない)で
+    レスポンスを返却しない場合に例外を発生させます。
+    timeout で明示的に指定しない場合、リクエストはタイムアウトしません。
 
 .. Errors and Exceptions
    ---------------------
