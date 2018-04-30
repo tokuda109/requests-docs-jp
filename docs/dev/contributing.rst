@@ -36,9 +36,12 @@ Requests プロジェクトに貢献することを考えているというこ�
 技術的なこと以外のフィードバック、哲学的な考え、クレイジーなアイデア、Python エコシステム内での位置づけや Requests についてのその他の一般的な考えがある場合、
 BDFL である `Kenneth Reitz`_ は、あなたからの意見に耳を傾けます。
 
-The guide is split into sections based on the type of contribution you're
-thinking of making, with a section that covers general guidelines for all
-contributors.
+.. The guide is split into sections based on the type of contribution you're
+   thinking of making, with a section that covers general guidelines for all
+   contributors.
+
+このガイドは、作成しようと考えているコントリビューションの方法によって分類され、
+全てのコントリビューター用の標準のガイドラインを網羅している分野のどこかに属します。
 
 .. _Kenneth Reitz: mailto:me@kennethreitz.org
 
@@ -98,7 +101,7 @@ Contribution Suitability
    contribution accepted.
 
 コントリビューションが拒否された場合、絶望しないで下さい！
-これらのガイドラインに従っている限り、you will have a much better chance of getting your next contribution accepted.
+これらのガイドラインに従っている限り、次のコントリビューションが受け入れられるさらなるチャンスがあると思います。
 
 .. Code Contributions
    ------------------
@@ -160,8 +163,11 @@ Contribution Suitability
 コードレビューへのフィードバックに異議を唱える場合、状況を整理して、落ち着いて下さい。
 その後、フィードバックが有効だと判断された場合は、フィードバックを適用するか、コントリビューションを取り消す必要があります。
 
-New Contributors
-~~~~~~~~~~~~~~~~
+.. New Contributors
+   ~~~~~~~~~~~~~~~~
+
+新規のコントリビューター
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. If you are new or relatively new to Open Source, welcome! Requests aims to
    be a gentle introduction to the world of Open Source. If you're concerned about
@@ -202,19 +208,20 @@ PEP 8 で述べられている基準に加えて、いくつかのガイドラ�
    completely lacks all sense of taste, and is not to be permitted within
    the Requests codebase::
 
-Additionally, one of the styles that PEP8 recommends for `line continuations`_
-completely lacks all sense of taste
+さらに、`line continuations`_ として PEP8 が推奨しているスタイルの1つは全然良くなくて、
 Requests のコードでは許可していません。::
 
     # Aligned with opening delimiter.
     foo = long_function_name(var_one, var_two,
                              var_three, var_four)
 
-No. Just don't. Please.
+.. No. Just don't. Please.
+
+良くないです、お願いですからそのように書かないで下さい。
 
 .. Docstrings are to follow the following syntaxes::
 
-Docstrings は以下のようなシンタックスにしてください。::
+Docstrings は、以下のようなシンタックスにしてください。::
 
     def the_earth_is_flat():
         """NASA divided up the seas into thirty-three degrees."""
@@ -241,7 +248,9 @@ Docstrings は以下のようなシンタックスにしてください。::
 すべての関数、メソッド、クラスに、Docstrings が含まれています。
 通常のオブジェクトのデータモデルのメソッド(例: ``__repr__``)は、このルールの適用外です。
 
-Thanks for helping to make the world a better place!
+.. Thanks for helping to make the world a better place!
+
+世の中が良くなるために協力してくれて有難うございます！
 
 .. _PEP 8: http://pep8.org
 .. _line continuations: https://www.python.org/dev/peps/pep-0008/#indentation

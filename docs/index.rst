@@ -28,7 +28,7 @@ Release v\ |version|. (:ref:`Installation <install>`)
 .. **Requests** is the only *Non-GMO* HTTP library for Python, safe for human
    consumption.
 
-**Requests** は、人が安全に使うことができるように考慮された Python 用の *Non-GMO* の HTTP ライブラリです。
+**Requests** は、人が使いやすいように考慮された Python 用の *遺伝子組み換えがされていない* HTTP ライブラリです。
 
 .. *Warning: Recreational use of the Python standard library for HTTP may result in dangerous side-effects,
    including: security vulnerabilities, verbose code, reinventing the wheel,
@@ -58,16 +58,16 @@ Release v\ |version|. (:ref:`Installation <install>`)
 
 .. See `similar code, sans Requests <https://gist.github.com/973705>`_.
 
-`Requests の類似のコード <https://gist.github.com/973705>`_ を参照して下さい。
+`Requests を使わない場合のコード <https://gist.github.com/973705>`_ も参照してみて下さい。
 
 .. **Requests** allows you to send *organic, grass-fed* HTTP/1.1 requests, without the
    need for manual labor. There's no need to manually add query strings to your
    URLs, or to form-encode your POST data. Keep-alive and HTTP connection pooling
    are 100% automatic, thanks to `urllib3 <https://github.com/shazow/urllib3>`_.
 
-**Requests** を使用すると、手作業を必要とせずに、*organic, grass-fed* HTTP/1.1 リクエストを送信することができます。
-クエリ文字列を URL に追加したり、POST データをフォームエンコードしたりする必要はありません。
-Keep-alive と HTTP のコネクションプールは、`urllib3 <https://github.com/shazow/urllib3>`_ のおかげで自動で行われます。
+**Requests** を使用すると、手作業を必要とせずに、*organic, grass-fed* な HTTP/1.1 リクエストを送信することができます。
+クエリ文字列を URL に追加したり、POST データをフォームエンコードしたりを手動でする必要はありません。
+Keep-alive と HTTP のコネクションプールは、`urllib3 <https://github.com/shazow/urllib3>`_ のおかげで100%自動で行われます。
 
 .. User Testimonials
    -----------------
@@ -112,7 +112,7 @@ Twilio、Runscope、Mozilla、Heroku、PayPal、NPR、Obama for America、Transi
    over 11,000,000 downloads every month. All the cool kids are doing it!
 
 Requests は最も多くダウンロードされている Python パッケージの1つで、毎月11,000,000回以上ダウンロードされています。
-All the cool kids are doing it!
+賢い人はみんな使っています！
 
 .. Beloved Features
    ----------------
@@ -142,18 +142,18 @@ Requestsは、今日(こんにち)のウェブに欠かせない機能を持っ�
 
 - キープアライブとコネクションプール
 - ドメインとURLの国際化
-- Cookieによるセッションの永続化
-- ブラウザスタイルのSSL検証
-- Automatic Content Decoding
+- Cookie によるセッションの永続化
+- ブラウザスタイルの SSL 検証
+- 自動のコンテンツデコード
 - Basic/Digest 認証
 - 自動な解凍
-- Elegant Key/Value Cookies
+- エレガントなキーと値の Cookies
 - Unicode レスポンスボディ
 - HTTP(S) プロキシのサポート
 - マルチパートのファイルアップロード
 - ストリーミング形式のダウンロード
 - コネクションのタイムアウト
-- チャンクリクエスト
+- チャンク化されたリクエスト
 - ``.netrc`` のサポート
 
 .. Requests officially supports Python 2.6–2.7 & 3.4–3.7, and runs great on PyPy.
@@ -244,4 +244,4 @@ APIドキュメント / ガイド
 .. There are no more guides. You are now guideless.
    Good luck.
 
-これ以上の説明はありませんし、もう必要ないと思います。Good luck。
+これ以上の説明はありませんし、もう必要ないと思います。グッド・ラック。

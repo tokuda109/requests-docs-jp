@@ -276,7 +276,7 @@ JSON のデコードに失敗した場合、``r.json()`` は例外を発生さ�
 .. In general, however, you should use a pattern like this to save what is being
    streamed to a file::
 
-しかし、一般的にはこのようなパターンを使ってファイルにストリーミングされているものを保存する必要があります。
+しかし、一般的にはこのようなパターンを使ってファイルにストリーミングされているものを保存する必要があります。::
 
     with open(filename, 'wb') as fd:
         for chunk in r.iter_content(chunk_size=128):
@@ -289,10 +289,8 @@ JSON のデコードに失敗した場合、``r.json()`` は例外を発生さ�
    may better fit your use cases.
 
 ``Response.iter_content`` を使うことで、直接 ``Response.raw`` を使う時にやらなければいけないことがたくさんあります。
-When streaming a
-download, the above is the preferred and recommended way to retrieve the
-content. Note that ``chunk_size`` can be freely adjusted to a number that
-may better fit your use cases.
+ダウンロードをストリーミングする時は、上記で勧められている方法でコンテンツを取得することをお勧めします。
+``chunk_size`` は、ユースケースに適した数に自由に調整することができます。
 
 .. Custom Headers
    --------------
@@ -327,7 +325,7 @@ may better fit your use cases.
 
 * `headers=` として設定された認証ヘッダーは、クレデンシャルが ``.netrc`` で指定されている場合は上書きされ、
   ``auth=`` パラメータによって上書きされます。
-* Authorization headers will be removed if you get redirected off-host.
+* off-host でリダイレクトされた場合、認証ヘッダーは削除されます。
 * Proxy-Authorization ヘッダーは、URL で提供されたプロキシのクレデンシャルによって更新されます。
 * Content-Length ヘッダーは、コンテンツの長さが決まった時に更新されます。
 
@@ -490,11 +488,11 @@ Requests は、マルチパートエンコードされたファイルを簡単�
 
 1つのリクエストで複数のファイルを送信するには、:ref:`advanced <advanced>` の章を参照して下さい。
 
-.. warning It is strongly recommended that you open files in `binary mode`_.
-           This is because Requests may attempt to provide the
-           ``Content-Length`` header for you, and if it does this value will
-           be set to the number of *bytes* in the file. Errors may occur if
-           you open the file in *text mode*.
+.. It is strongly recommended that you open files in `binary mode`_.
+   This is because Requests may attempt to provide the
+   ``Content-Length`` header for you, and if it does this value will
+   be set to the number of *bytes* in the file. Errors may occur if
+   you open the file in *text mode*.
 
 .. warning:: `binary mode`_ でファイルを開くことを強くお勧めします。
              これは、Requests が ``Content-Length`` ヘッダーを提供しようとする可能性があり、
@@ -604,10 +602,14 @@ Python のディクショナリで実装されたサーバーのレスポンス�
 Requests は、`RFC 7230 <http://tools.ietf.org/html/rfc7230#section-3.2>`_ に従って、
 単一のマッピング内のディクショナリで表現できるように結合します。
 
-    A recipient MAY combine multiple header fields with the same field name
-    into one "field-name: field-value" pair, without changing the semantics
-    of the message, by appending each subsequent field value to the combined
-    field value in order, separated by a comma.
+    .. A recipient MAY combine multiple header fields with the same field name
+       into one "field-name: field-value" pair, without changing the semantics
+       of the message, by appending each subsequent field value to the combined
+       field value in order, separated by a comma.
+
+    後続の各フィールドの値をコンマで分割されて結合されたフィールドの値を順番に追加することによって、
+    メッセージのセマンティクスを変更せずに、"field-name: field-value" のペアとして組み合わせて
+    同じフィールド名に複数のヘッダーフィールドを結合されるかもしれません。
 
 Cookies
 -------
@@ -639,7 +641,7 @@ Cookie をサーバーに送信するには、``cookies`` パラメータを使�
    suitable for use over multiple domains or paths.  Cookie jars can
    also be passed in to requests::
 
-Cookie は ``ディクショナリ`` のように振る舞う :class:`~requests.cookies.RequestsCookieJar` から返却され、
+Cookie は ``dict`` のように振る舞う :class:`~requests.cookies.RequestsCookieJar` から返却され、
 複数のドメインやパスでの使用に適したより完全なインターフェースも提供しています。
 CookieJar をリクエストに渡すこともできます。::
 

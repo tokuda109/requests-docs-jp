@@ -184,8 +184,8 @@ Prepared Requests
    work to the body or headers (or anything else really) before sending a
    request. The simple recipe for this is the following::
 
-API や Session の呼び出して :class:`Response <requests.Response>` オブジェクトを受け取るたびに、
-``request`` 属性は、``PreparedRequest`` です。
+API や Session の呼び出しから :class:`Response <requests.Response>` オブジェクトを受け取る際に、
+``request`` 属性は、その際に使われた ``PreparedRequest`` となっています。
 場合によって、リクエストを送信する前にボディやヘッダー(または他のもの)に追加作業をしたいことがあります。
 簡単なやりかたは以下のとおりです。::
 
@@ -348,8 +348,11 @@ SSLError を送出します。
     >>> requests.get('https://kennethreitz.org', cert='/wrong_path/client.pem')
     SSLError: [Errno 336265225] _ssl.c:347: error:140B0009:SSL routines:SSL_CTX_use_PrivateKey_file:PEM lib
 
-.. warning:: The private key to your local certificate *must* be unencrypted.
+.. The private key to your local certificate *must* be unencrypted.
    Currently, Requests does not support using encrypted keys.
+
+.. warning:: ローカルの証明書の秘密鍵は暗号化されていないようにしておきます。
+             現在、Requests は暗号化されたキーを使う機能をサポートしていません。
 
 .. _ca-certificates:
 
@@ -400,7 +403,7 @@ Requests のバージョン2.4.0からは、証明書がシステム上にある
 
 デフォルトでは、リクエストを行うとレスポンスのボディをすぐにダウンロードします。
 この動作を上書きすることができ、:attr:`Response.content <requests.Response.content>` 属性に
-``stream`` パラメータを指定してアクセスするまでレスポンスのボディのダウンロードを遅らせることができます。
+``stream`` パラメータを指定してアクセスするまでレスポンスのボディのダウンロードを遅らせることができます。::
 
     tarball_url = 'https://github.com/requests/requests/tarball/master'
     r = requests.get(tarball_url, stream=True)
@@ -409,7 +412,7 @@ Requests のバージョン2.4.0からは、証明書がシステム上にある
    remains open, hence allowing us to make content retrieval conditional::
 
 この時点で、レスポンスヘッダ−のみダウンロードされ、コネクションは接続したままのため、
-コンテンツの取得を条件付きで許可するようにすることができます。
+コンテンツの取得を条件付きで許可するようにすることができます。::
 
     if int(r.headers['content-length']) < TOO_LONG:
       content = r.content
@@ -638,21 +641,36 @@ Available hooks:
 
 .. _custom-auth:
 
-Custom Authentication
----------------------
+独自の認証
+------------------------
 
-Requests allows you to use specify your own authentication mechanism.
+.. Custom Authentication
+   ---------------------
 
-Any callable which is passed as the ``auth`` argument to a request method will
-have the opportunity to modify the request before it is dispatched.
+.. Requests allows you to use specify your own authentication mechanism.
 
-Authentication implementations are subclasses of :class:`AuthBase <requests.auth.AuthBase>`,
-and are easy to define. Requests provides two common authentication scheme
-implementations in ``requests.auth``: :class:`HTTPBasicAuth <requests.auth.HTTPBasicAuth>` and
-:class:`HTTPDigestAuth <requests.auth.HTTPDigestAuth>`.
+Requests は独自の認証メカニズムを指定することができます。
 
-Let's pretend that we have a web service that will only respond if the
-``X-Pizza`` header is set to a password value. Unlikely, but just go with it.
+.. Any callable which is passed as the ``auth`` argument to a request method will
+   have the opportunity to modify the request before it is dispatched.
+
+リクエストのメソッドの ``auth`` 引数に渡した任意の呼び出し可能オブジェクトは、
+ディスパッチされる前にリクエストを変更する機会があります。
+
+.. Authentication implementations are subclasses of :class:`AuthBase <requests.auth.AuthBase>`,
+   and are easy to define. Requests provides two common authentication scheme
+   implementations in ``requests.auth``: :class:`HTTPBasicAuth <requests.auth.HTTPBasicAuth>` and
+   :class:`HTTPDigestAuth <requests.auth.HTTPDigestAuth>`.
+
+認証の実装方法は :class:`AuthBase <requests.auth.AuthBase>` のサブクラスで、簡単に定義できます。
+Requests は、``requests.auth`` に :class:`HTTPBasicAuth <requests.auth.HTTPBasicAuth>` と
+:class:`HTTPDigestAuth <requests.auth.HTTPDigestAuth>` の2つの共通の認証スキームの実装を提供しています。
+
+.. Let's pretend that we have a web service that will only respond if the
+   ``X-Pizza`` header is set to a password value. Unlikely, but just go with it.
+
+``X-Pizza`` ヘッダーにパスワードの値が設定されている場合のみ応答するウェブサービスがあるとしましょう。
+そんなサービスはないと思うかもしれませんが、騙されたと思って見ていきましょう。
 
 ::
 
@@ -669,21 +687,30 @@ Let's pretend that we have a web service that will only respond if the
             r.headers['X-Pizza'] = self.username
             return r
 
-Then, we can make a request using our Pizza Auth::
+.. Then, we can make a request using our Pizza Auth::
+
+その後、Pizza Auth を使ってリクエストを行うことができます。::
 
     >>> requests.get('http://pizzabin.org/admin', auth=PizzaAuth('kenneth'))
     <Response [200]>
 
 .. _streaming-requests:
 
-Streaming Requests
-------------------
+ストリーミングリクエスト
+----------------------------
 
-With :meth:`Response.iter_lines() <requests.Response.iter_lines>` you can easily
-iterate over streaming APIs such as the `Twitter Streaming
-API <https://dev.twitter.com/streaming/overview>`_. Simply
-set ``stream`` to ``True`` and iterate over the response with
-:meth:`~requests.Response.iter_lines()`::
+.. Streaming Requests
+   ------------------
+
+.. With :meth:`Response.iter_lines() <requests.Response.iter_lines>` you can easily
+   iterate over streaming APIs such as the `Twitter Streaming
+   API <https://dev.twitter.com/streaming/overview>`_. Simply
+   set ``stream`` to ``True`` and iterate over the response with
+   :meth:`~requests.Response.iter_lines()`::
+
+:meth:`Response.iter_lines() <requests.Response.iter_lines>` を使って、
+`Twitter Streaming API <https://dev.twitter.com/streaming/overview>`_ 等のストリーミング API を簡単にイテレーション処理をすることができます。
+``stream`` を ``True`` に設定し、:meth:`~requests.Response.iter_lines()` で応答をイテレーション処理を行います。::
 
     import json
     import requests
@@ -697,10 +724,14 @@ set ``stream`` to ``True`` and iterate over the response with
             decoded_line = line.decode('utf-8')
             print(json.loads(decoded_line))
 
-When using `decode_unicode=True` with
-:meth:`Response.iter_lines() <requests.Response.iter_lines>` or
-:meth:`Response.iter_content() <requests.Response.iter_content>`, you'll want
-to provide a fallback encoding in the event the server doesn't provide one::
+.. When using `decode_unicode=True` with
+   :meth:`Response.iter_lines() <requests.Response.iter_lines>` or
+   :meth:`Response.iter_content() <requests.Response.iter_content>`, you'll want
+   to provide a fallback encoding in the event the server doesn't provide one::
+
+:meth:`Response.iter_lines() <requests.Response.iter_lines>` や
+:meth:`Response.iter_content() <requests.Response.iter_content>` で `decode_unicode=True` を使う場合、
+サーバーが提供していないイベントでフォールバックエンコーディングを指定することをお勧めします。::
 
     r = requests.get('http://httpbin.org/stream/20', stream=True)
 
@@ -711,12 +742,24 @@ to provide a fallback encoding in the event the server doesn't provide one::
         if line:
             print(json.loads(line))
 
+.. :meth:`~requests.Response.iter_lines()` is not reentrant safe.
+   Calling this method multiple times causes some of the received data
+   being lost. In case you need to call it from multiple places, use
+   the resulting iterator object instead::
+
+        lines = r.iter_lines()
+        # Save the first line for later or just skip it
+
+        first_line = next(lines)
+
+        for line in lines:
+            print(line)
+
 .. warning::
 
-    :meth:`~requests.Response.iter_lines()` is not reentrant safe.
-    Calling this method multiple times causes some of the received data
-    being lost. In case you need to call it from multiple places, use
-    the resulting iterator object instead::
+    :meth:`~requests.Response.iter_lines()` は、リエントラント安全ではありません。
+    このメソッドを複数回呼び出すと、受信したデータの一部が失われます。
+    複数の場所から呼び出す必要がある場合、代わりにイテレータオブジェクトの結果を使います。::
 
         lines = r.iter_lines()
         # Save the first line for later or just skip it
@@ -787,25 +830,36 @@ SOCKS
 
 .. versionadded:: 2.10.0
 
-In addition to basic HTTP proxies, Requests also supports proxies using the
-SOCKS protocol. This is an optional feature that requires that additional
-third-party libraries be installed before use.
+.. In addition to basic HTTP proxies, Requests also supports proxies using the
+   SOCKS protocol. This is an optional feature that requires that additional
+   third-party libraries be installed before use.
 
-You can get the dependencies for this feature from ``pip``:
+基本的な HTTP プロキシに加えて、Requests は SOCKS プロトコルを使ったプロキシもサポートしています。
+これはオプションの機能で、使う前に追加のサードパーティのライブラリを必要とします。
+
+.. You can get the dependencies for this feature from ``pip``:
+
+``pip`` から、この機能を使うための依存を取得することができます。:
 
 .. code-block:: bash
 
     $ pip install requests[socks]
 
-Once you've installed those dependencies, using a SOCKS proxy is just as easy
-as using a HTTP one::
+.. Once you've installed those dependencies, using a SOCKS proxy is just as easy
+   as using a HTTP one::
+
+これらの依存をインストールしたら、SOCKS プロキシを使うのは、HTTP を使うのと同じくらい簡単です。::
 
     proxies = {
         'http': 'socks5://user:pass@host:port',
         'https': 'socks5://user:pass@host:port'
     }
 
-Using the scheme ``socks5`` causes the DNS resolution to happen on the client, rather than on the proxy server. This is in line with curl, which uses the scheme to decide whether to do the DNS resolution on the client or proxy. If you want to resolve the domains on the proxy server, use ``socks5h`` as the scheme.
+.. Using the scheme ``socks5`` causes the DNS resolution to happen on the client, rather than on the proxy server. This is in line with curl, which uses the scheme to decide whether to do the DNS resolution on the client or proxy. If you want to resolve the domains on the proxy server, use ``socks5h`` as the scheme.
+
+``socks5`` スキームを使うと DNS の名前解決がプロキシサーバーではなく、クライアント側で行われます。
+これはクライアントやプロキシで DNS の名前解決を行うかどうかを決定するためにこのスキームを curl が使うのと同様です。
+プロキシサーバー上のドメインを解決する場合は、スキームとして ``socks5h`` を使います。
 
 .. _compliance:
 
@@ -994,8 +1048,12 @@ Cool、コメントが3つあります。コメントの最後を見てみまし
     >>> print(comments[2][u'body'])
     Probably in the "advanced" section
 
-Well, that seems like a silly place. Let's post a comment telling the poster
-that he's silly. Who is the poster, anyway?::
+.. Well, that seems like a silly place. Let's post a comment telling the poster
+   that he's silly. Who is the poster, anyway?::
+
+見る場所が良くなかったみたいですね。
+投稿者にふざけていることを教えるコメントを投稿してみましょう。
+投稿者は誰だろう？::
 
     >>> print(comments[2][u'user'][u'login'])
     kennethreitz
@@ -1015,9 +1073,14 @@ GitHub の API のドキュメントによると、これを行う方法はス�
     >>> r.status_code
     404
 
-Huh, that's weird. We probably need to authenticate. That'll be a pain, right?
-Wrong. Requests makes it easy to use many forms of authentication, including
-the very common Basic Auth.
+.. Huh, that's weird. We probably need to authenticate. That'll be a pain, right?
+   Wrong. Requests makes it easy to use many forms of authentication, including
+   the very common Basic Auth.
+
+う〜ん、おかしいなぁ。
+多分認証する必要がありそうですね。
+面倒ですよね？大丈夫ですよ。
+Requests は、とても一般的な Basic 認証を含む様々な認証方法を簡単に使うことができます。
 
 ::
 
@@ -1032,10 +1095,17 @@ the very common Basic Auth.
     >>> print(content[u'body'])
     Sounds great! I'll get right on it.
 
-Brilliant. Oh, wait, no! I meant to add that it would take me a while, because
-I had to go feed my cat. If only I could edit this comment! Happily, GitHub
-allows us to use another HTTP verb, PATCH, to edit this comment. Let's do
-that.
+.. Brilliant. Oh, wait, no! I meant to add that it would take me a while, because
+   I had to go feed my cat. If only I could edit this comment! Happily, GitHub
+   allows us to use another HTTP verb, PATCH, to edit this comment. Let's do
+   that.
+
+いいですね。
+ちょっと待った！
+ネコに餌をあげないといけないので、しばらく時間がかかるということを追加したいとします。
+もしこのコメントを編集できたら。
+幸いにも、GitHub はこのコメントを編集するための PATCH という別の HTTP メソッドを使うことができます。
+ではやってみましょう。
 
 ::
 
@@ -1049,10 +1119,16 @@ that.
     >>> r.status_code
     200
 
-Excellent. Now, just to torture this Kenneth guy, I've decided to let him
-sweat and not tell him that I'm working on this. That means I want to delete
-this comment. GitHub lets us delete comments using the incredibly aptly named
-DELETE method. Let's get rid of it.
+.. Excellent. Now, just to torture this Kenneth guy, I've decided to let him
+   sweat and not tell him that I'm working on this. That means I want to delete
+   this comment. GitHub lets us delete comments using the incredibly aptly named
+   DELETE method. Let's get rid of it.
+
+素晴らしい。
+では、Kenneth という方を焦らせてしまうので、この作業をしているということを知られないようにしようと決めました。
+つまり、このコメントを削除したいということです。
+GitHub は適切な名前が付けられている DELETE メソッドを使ってコメントを削除してみましょう。
+では取り除いてみましょう。
 
 ::
 
@@ -1062,10 +1138,17 @@ DELETE method. Let's get rid of it.
     >>> r.headers['status']
     '204 No Content'
 
-Excellent. All gone. The last thing I want to know is how much of my ratelimit
-I've used. Let's find out. GitHub sends that information in the headers, so
-rather than download the whole page I'll send a HEAD request to get the
-headers.
+.. Excellent. All gone. The last thing I want to know is how much of my ratelimit
+   I've used. Let's find out. GitHub sends that information in the headers, so
+   rather than download the whole page I'll send a HEAD request to get the
+   headers.
+
+素晴らしい。
+全てなくなりました。
+あと知りたいことは、使ったレートリミットです。
+確認してみましょう。
+GitHub はその情報をヘッダーに追加して送信してくるので、
+ページ全体をダウンロードせず、HEAD リクエストを送信してヘッダーを取得します。
 
 ::
 
@@ -1076,8 +1159,11 @@ headers.
     'x-ratelimit-limit': '5000'
     ...
 
-Excellent. Time to write a Python program that abuses the GitHub API in all
-kinds of exciting ways, 4995 more times.
+.. Excellent. Time to write a Python program that abuses the GitHub API in all
+   kinds of exciting ways, 4995 more times.
+
+素晴らしい。
+4995回以上のエキサイティングな方法で GitHub API を使う Python プログラムを書くことができる回数です。
 
 .. _custom-verbs:
 
@@ -1108,21 +1194,31 @@ kinds of exciting ways, 4995 more times.
 
 .. _link-headers:
 
-Link Headers
-------------
+リンクヘッダー
+------------------
 
-Many HTTP APIs feature Link headers. They make APIs more self describing and
-discoverable.
+.. Link Headers
+   ------------
 
-GitHub uses these for `pagination <http://developer.github.com/v3/#pagination>`_
-in their API, for example::
+.. Many HTTP APIs feature Link headers. They make APIs more self describing and
+   discoverable.
+
+多くの HTTP API にはリンクヘッダーがあります。それらは API を発見しやすくします。
+
+.. GitHub uses these for `pagination <http://developer.github.com/v3/#pagination>`_
+   in their API, for example::
+
+GitHub は API の `pagination <http://developer.github.com/v3/#pagination>`_ にこれを使用します。
+例として::
 
     >>> url = 'https://api.github.com/users/kennethreitz/repos?page=1&per_page=10'
     >>> r = requests.head(url=url)
     >>> r.headers['link']
     '<https://api.github.com/users/kennethreitz/repos?page=2&per_page=10>; rel="next", <https://api.github.com/users/kennethreitz/repos?page=6&per_page=10>; rel="last"'
 
-Requests will automatically parse these link headers and make them easily consumable::
+.. Requests will automatically parse these link headers and make them easily consumable::
+
+Requests は自動的にリンクヘッダーを解析し、簡単に使えるようにします。::
 
     >>> r.links["next"]
     {'url': 'https://api.github.com/users/kennethreitz/repos?page=2&per_page=10', 'rel': 'next'}
@@ -1190,18 +1286,28 @@ mount の呼び出しをトランスポートアダプタの特定のインス�
 トランスポートアダプタを実装する詳細の多くは、このドキュメントの範囲を超えていますが、単純な SSL のユースケースの次の例を見て下さい。
 それ以上の場合は、:class:`BaseAdapter <requests.adapters.BaseAdapter>` のサブクラス化を参照して下さい。
 
-Example: Specific SSL Version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. Example: Specific SSL Version
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Requests team has made a specific choice to use whatever SSL version is
-default in the underlying library (`urllib3`_). Normally this is fine, but from
-time to time, you might find yourself needing to connect to a service-endpoint
-that uses a version that isn't compatible with the default.
+例: 特定のSSLバージョン
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can use Transport Adapters for this by taking most of the existing
-implementation of HTTPAdapter, and adding a parameter *ssl_version* that gets
-passed-through to `urllib3`. We'll make a Transport Adapter that instructs the
-library to use SSLv3::
+.. The Requests team has made a specific choice to use whatever SSL version is
+   default in the underlying library (`urllib3`_). Normally this is fine, but from
+   time to time, you might find yourself needing to connect to a service-endpoint
+   that uses a version that isn't compatible with the default.
+
+Requests チームは基礎となるライブラリ(`urllib3`_)にデフォルトの SSL バージョンを使用するような選択をしました。
+通常これは問題となりませんが、時にはデフォルトと互換性のないバージョンを使用するサービスのエンドポイントに
+接続する必要があるかもしれません。
+
+.. You can use Transport Adapters for this by taking most of the existing
+   implementation of HTTPAdapter, and adding a parameter *ssl_version* that gets
+   passed-through to `urllib3`. We'll make a Transport Adapter that instructs the
+   library to use SSLv3::
+
+HTTPAdapter の既存の実装の大部分を引き継ぎ、`urllib3` に渡す *ssl_version* パラメータを追加することでトランスポートアダプタを使うことができます。
+ライブラリに SSLv3 を使うように指定するトランスポートアダプタを作成します。::
 
     import ssl
 
